@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .fade-in-bottom {
+    opacity: 0;
+    transform: translateY(100px);
+    animation: fadeInFromBottom 1s forwards;
+  }
+
+  @keyframes fadeInFromBottom {
+    0% {
+      opacity: 0;
+      transform: translateY(100px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-right {
+    opacity: 0;
+    transform: translateX(200px);
+    animation: fadeIn 1s forwards;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .grid-layout {
+    grid-template-columns: repeat(3, max(256px, 1fr));
+  }
+
+  @keyframes flicker {
+    0% {
+      opacity: 0.27861;
+    }
+    5% {
+      opacity: 0.34769;
+    }
+    10% {
+      opacity: 0.23604;
+    }
+    15% {
+      opacity: 0.90626;
+    }
+    20% {
+      opacity: 0.18128;
+    }
+    25% {
+      opacity: 0.83891;
+    }
+    30% {
+      opacity: 0.65583;
+    }
+    35% {
+      opacity: 0.67807;
+    }
+    40% {
+      opacity: 0.26559;
+    }
+    45% {
+      opacity: 0.84693;
+    }
+    50% {
+      opacity: 0.96019;
+    }
+    55% {
+      opacity: 0.08594;
+    }
+    60% {
+      opacity: 0.20313;
+    }
+    65% {
+      opacity: 0.71988;
+    }
+    70% {
+      opacity: 0.53455;
+    }
+    75% {
+      opacity: 0.37288;
+    }
+    80% {
+      opacity: 0.71428;
+    }
+    85% {
+      opacity: 0.70419;
+    }
+    90% {
+      opacity: 0.7003;
+    }
+    95% {
+      opacity: 0.36108;
+    }
+    100% {
+      opacity: 0.24387;
+    }
+  }
+
+  .crt::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.05) 90%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.1),
+        rgba(0, 255, 0, 0.05),
+        rgba(0, 0, 255, 0.1)
+      );
+    z-index: 20;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+  }
+}
+
+@layer components {
+  .channel-shadow {
+    @apply relative;
+    box-shadow: 0px 0px 0px 1px rgba(22, 36, 44, 0.12),
+      0px 1px 2px 0px rgba(22, 36, 44, 0.16),
+      0px 4px 8px -4px rgba(22, 36, 44, 0.16),
+      0px -3px 0.75px 0px rgba(22, 36, 44, 0.06) inset,
+      0px 1px 0.75px 0px rgba(255, 255, 255, 0.5) inset;
+  }
+
+  .soft-channel-shadow {
+    @apply relative;
+    box-shadow: 0px 0px 0px 1px rgba(22, 36, 44, 0.06),
+      0px 1px 2px 0px rgba(22, 36, 44, 0.08),
+      0px 4px 8px -4px rgba(22, 36, 44, 0.08),
+      0px -3px 0.75px 0px rgba(22, 36, 44, 0.03) inset,
+      0px 1px 0.75px 0px rgba(255, 255, 255, 0.25) inset;
+  }
+
+  .channel-shadow::after {
+    @apply absolute top-0 bottom-0 right-0 left-0  opacity-0 transition-opacity -z-10;
+    content: "";
+    border-radius: inherit;
+    box-shadow: 0px 0px 0px 6px rgba(22, 36, 44, 0.05),
+      0px 1px 2px 0px rgba(22, 36, 44, 0.16),
+      0px 4px 8px -4px rgba(22, 36, 44, 0.16);
+  }
+  .channel-shadow:hover::after {
+    @apply opacity-100;
+  }
+}
+
+@layer base {
+  html {
+    @apply font-space selection:bg-[#DBDCDD]/80;
+  }
+  * {
+    cursor: url("/crt-cursor.png"), auto !important;
+    /* cursor: none; */
+  }
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Bold.ttf");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Medium.ttf");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-SemiBold.ttf");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
