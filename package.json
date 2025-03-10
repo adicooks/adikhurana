@@ -10,6 +10,9 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
+  "engines": {
+      "node": "18.x"
+  },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^1.20.4",
@@ -22,6 +25,7 @@
     "tailwindcss-image-rendering": "^1.0.2",
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
+    "vercel": "^41.3.2",
     "vite": "^4.5.9"
   },
   "type": "module",
@@ -31,4 +35,3 @@
     "css-houdini-squircle": "^0.3.0"
   }
 }
-
