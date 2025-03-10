@@ -21,7 +21,7 @@
     on:click|preventDefault={openModal}
   >
     <img
-      class="relative -right-16 w-28 h-28 m-auto group-hover:rotate-180 duration-300"
+      class="relative left-[72px] -right-16 w-28 h-28 m-auto group-hover:rotate-180 duration-300"
       src={Disc}
       alt="Disc"
     />

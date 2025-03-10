@@ -11,13 +11,11 @@
   import NiChartCard from "$lib/components/cards/NiChartCard.svelte";
   import GalaxyCard from "$lib/components/cards/GalaxyCard.svelte";
   import ResumeCard from "$lib/components/cards/ResumeCard.svelte";
+  import InfoCard from "$lib/components/InfoCard.svelte";
   import Email from "$lib/assets/email.svg";
-  let currentTime: string = "";
 
-  onMount(() => {
-    updateTime();
-    setInterval(updateTime, 1000); 
-  });
+  let currentTime: string = "";
+  let audio: HTMLAudioElement | null = null;
 
   function updateTime() {
     const now = new Date();
@@ -32,11 +30,16 @@
     currentTime = now.toLocaleString("en-US", options);
   }
 
-  let audio: HTMLAudioElement | null = null;
-
   onMount(() => {
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Create audio and delay auto play by 1 second
     audio = new Audio("/wii.background.mp3");
     audio.loop = true;
+    setTimeout(() => {
+      audio.play().catch((e) => console.warn("Autoplay blocked:", e));
+    }, 1000);
   });
 
   function playMusic(event: Event) {
@@ -60,7 +63,7 @@
     <div
       class="fade-in-right grid grid-rows-3 grid-flow-col gap-4 p-2 px-4 md:p-8 md:px-14 w-full max-w-7xl mx-auto horizontal-scroll"
     >
-      <MoreSoonCard />
+      <InfoCard />
       <ResumeCard />
       <NiChartCard />
       <GalaxyCard />
@@ -118,12 +121,12 @@
         src={NotchEdge}
         alt="Notch Edge"
       />
-      <div class="sm:w-[100rem]">
+      <div
+        class="sm:w-[100rem] flex flex-col items-center justify-center h-[50px] sm:h-[70px] -translate-y-1"
+      >
         <p
-          class="text-xl sm:text-2xl font-medium text-center whitespace-nowrap text-[#010313]/50 -translate-y-1 w-full"
+          class="text-xl sm:text-2xl font-medium text-center whitespace-nowrap text-[#010313]/50 w-full"
         >
-          adi.khurana
-          <br />
           {currentTime.toLowerCase()}
         </p>
       </div>
@@ -148,7 +151,6 @@
     scrollbar-width: none; /* For Firefox */
     -ms-overflow-style: none; /* For Internet Explorer and Edge */
   }
-
   .horizontal-scroll::-webkit-scrollbar {
     width: 0px; /* For Chrome, Safari, and Opera */
   }
