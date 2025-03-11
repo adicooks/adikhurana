@@ -4,7 +4,7 @@
 </script>
 
 <Card
-  href="https://www.linkedin.com/in/adi-khurana1/"
+  href="https://neuroimagingchart.com/"
   additionalClasses="hover:scale-100 bg-[#ffffff]"
 >
   <div

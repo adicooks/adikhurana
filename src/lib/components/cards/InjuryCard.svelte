@@ -3,7 +3,7 @@
   import PiscBackground from "$lib/assets/pisc-bg.png";
 </script>
 
-<Card href="https://vanish.so" additionalClasses="hover:scale-100 bg-[#081c5c]">
+<Card href="https://www.penninjuryscience.org/" additionalClasses="hover:scale-100 bg-[#081c5c]">
   <div
     class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full relative"
   >
