@@ -27,8 +27,8 @@
   import PennBG     from "$lib/assets/penn-bg.jpeg";
   import TeachingBG from "$lib/assets/teaching.jpg";
   import InfoBG     from "$lib/assets/adi_pic.jpg";
-  import Iccr    from "$lib/assets/iccr.jpg";
-  import ScienceBG from "$lib/assets/sciencebg.jpg";
+  import Iccr       from "$lib/assets/iccr.jpg";
+  import ScienceBG  from "$lib/assets/sciencebg.jpg";
 
   let showModal = false;
   let modalCardId: string | null = null;
@@ -43,9 +43,9 @@
     injury:       { text: "injury trends decoded",          photo: PiscBG },
     nichart:      { text: "tackling alzheimer's with ai",   photo: PennBG },
     forkidsbykids:{ text: "building for kids by kids",      photo: TeachingBG },
-    info:         { text: "about",                           photo: InfoBG },
-    hindi:       { text: "representing india",                           photo: Iccr },
-    science:     { text: "exploring ideas thru science",  photo: ScienceBG },
+    info:         { text: "about",                          photo: InfoBG },
+    hindi:        { text: "representing india",             photo: Iccr },
+    science:      { text: "exploring ideas thru science",   photo: ScienceBG },
   };
 
   function openEditModal(cardId: string) {
@@ -69,6 +69,7 @@
 
   let currentTime: string = "";
   let audio: HTMLAudioElement | null = null;
+  let isPlaying = false;
 
   function updateTime() {
     const now = new Date();
@@ -83,35 +84,34 @@
     currentTime = now.toLocaleString("en-US", options);
   }
 
-  function playAudio() {
-    if (audio) {
-      audio.play().catch((e) =>
-        console.warn("Audio play failed on interaction:", e)
-      );
-    }
-  }
-
   onMount(() => {
     updateTime();
     setInterval(updateTime, 1000);
 
+    // Prepare audio but DO NOT play it.
     audio = new Audio("/wii.background.mp3");
     audio.loop = true;
 
-    setTimeout(() => {
-      audio!.play().catch((e) => console.warn("Autoplay blocked:", e));
-    }, 1000);
-
-    const playOnInteraction = () => playAudio();
-
-    window.addEventListener("mousemove", playOnInteraction, { once: true });
-    window.addEventListener("click", playOnInteraction, { once: true });
-    window.addEventListener("touchstart", playOnInteraction, { once: true });
+    // Keep UI state in sync if user pauses via OS controls
+    audio.addEventListener("play", () => (isPlaying = true));
+    audio.addEventListener("pause", () => (isPlaying = false));
+    audio.addEventListener("ended", () => (isPlaying = false));
   });
 
-  function playMusic(event: Event) {
+  async function playMusic(event: Event) {
     event.preventDefault();
-    playAudio();
+    if (!audio) return;
+
+    try {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        await audio.play();
+      }
+      // isPlaying will update via event listeners above
+    } catch (e) {
+      console.warn("Play failed:", e);
+    }
   }
 </script>
 
@@ -178,7 +178,7 @@
         photo={cardContent.chess.photo}
       /> -->
 
-      <ShoeCard />
+      <ShoeCard/>
 
       <GithubCard
         onEdit={() => openEditModal('github')}
