@@ -18,7 +18,6 @@
 
   import Email from "$lib/assets/email.svg";
 
-  // ✅ Import images from $lib so Vite bundles them correctly in production
   import GalaxyBG   from "$lib/assets/galaxygmails-bg.png";
   import HeatmapSVG from "$lib/assets/heatmap.svg";
   import LinkedBG   from "$lib/assets/linkedin-bg.jpeg";
@@ -27,13 +26,11 @@
   import TeachingBG from "$lib/assets/teaching.jpg";
   import InfoBG     from "$lib/assets/adi_pic.jpg";
 
-  // Modal state for editing card content
   let showModal = false;
   let modalCardId: string | null = null;
   let modalText = "";
   let modalPhoto = "";
 
-  // Store unique content for each card by id (use imported assets instead of /src/... strings)
   let cardContent: Record<string, { text: string; photo: string }> = {
     chess:        { text: "playing for mate",               photo: "https://images3.alphacoders.com/189/thumb-1920-189859.jpg" },
     galaxy:       { text: "bots approved here",             photo: GalaxyBG },
@@ -139,13 +136,13 @@
         photo={cardContent.nichart.photo}
       />
 
-      {/*
+      <!--
       <GalaxyCard
-        onEdit={() => openEditModal('galaxy')}
-        text={cardContent.galaxy.text}
-        photo={cardContent.galaxy.photo}
+      onEdit={() => openEditModal('galaxy')}
+      ext={cardContent.galaxy.text}
+      photo={cardContent.galaxy.photo}
       />
-      */}
+      -->
 
       <InjuryCard
         onEdit={() => openEditModal('injury')}
