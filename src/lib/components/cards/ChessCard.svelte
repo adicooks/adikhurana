@@ -1,14 +1,16 @@
+
 <script>
   import Card from "../Card.svelte";
+  export let text = "playing for mate";
+  export let photo = "https://images3.alphacoders.com/189/thumb-1920-189859.jpg";
+  export let onEdit = () => {};
 </script>
 
 <Card
-  href="https://www.chess.com/member/adicooks"
   additionalClasses="hover:scale-100 bg-[#000000]"
+  onClick={onEdit}
 >
-  <div
-    class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full"
-  >
+  <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full">
     <svg
      class="translate-y-6 -translate-x-1 group-hover:translate-y-0 transition-transform z-10"
       fill="#ffffff"
@@ -46,12 +48,14 @@
     <p
       class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition"
     >
-      playing for mate
+      {text}
     </p>
-    <img
-      class="absolute z-8 -top-3 left-20 group-hover:-translate-y-2 transition-transform opacity-80"
-      src="https://images3.alphacoders.com/189/thumb-1920-189859.jpg"
-      alt=""
-    />
+    {#if photo}
+      <img
+        class="absolute z-8 -top-3 left-20 group-hover:-translate-y-2 transition-transform opacity-80"
+        src={photo}
+        alt=""
+      />
+    {/if}
   </div>
 </Card>

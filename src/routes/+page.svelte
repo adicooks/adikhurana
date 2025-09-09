@@ -12,6 +12,44 @@
   import GalaxyCard from "$lib/components/cards/GalaxyCard.svelte";
   import ResumeCard from "$lib/components/cards/ResumeCard.svelte";
   import InfoCard from "$lib/components/InfoCard.svelte";
+  import ForKidsByKidsCard from "$lib/components/ForKidsByKidsCard.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  // Modal state for editing card content
+  let showModal = false;
+  let modalCardId = null;
+  let modalText = "";
+  let modalPhoto = "";
+
+  // Store unique content for each card by id
+  let cardContent = {
+    chess: { text: "playing for mate", photo: "https://images3.alphacoders.com/189/thumb-1920-189859.jpg" },
+    galaxy: { text: "bots approved here", photo: "/src/lib/assets/galaxygmails-bg.png" },
+    github: { text: "pip install code", photo: "/src/lib/assets/heatmap.svg" },
+    linkedin: { text: "my resume, but cooler", photo: "/src/lib/assets/linkedin-bg.jpeg" },
+    injury: { text: "injury trends decoded", photo: "/src/lib/assets/pisc-bg.png" },
+    nichart: { text: "tackling alzheimer's with ai", photo: "/src/lib/assets/penn-bg.jpeg" },
+    forkidsbykids: { text: "building for kids by kids", photo: "/src/lib/assets/teaching.jpg" },
+    info: { text: "tackling alzheimer's with ai", photo: "/src/lib/assets/adi_pic.jpg" },
+  };
+
+  function openEditModal(cardId) {
+    modalCardId = cardId;
+    modalText = cardContent[cardId]?.text || "";
+    modalPhoto = cardContent[cardId]?.photo || "";
+    showModal = true;
+  }
+
+  function closeEditModal() {
+    showModal = false;
+    modalCardId = null;
+  }
+
+  function saveEditModal() {
+    if (modalCardId) {
+      cardContent[modalCardId] = { text: modalText, photo: modalPhoto };
+    }
+    closeEditModal();
+  }
   import Email from "$lib/assets/email.svg";
 
   let currentTime: string = "";
@@ -69,15 +107,25 @@
     <div class="hidden md:block absolute top-0 bottom-0 right-0 w-14 bg-gradient-to-r from-transparent to-[#EEEEEE] z-10" />
     <div class="hidden md:block absolute top-0 bottom-0 left-0 w-14 bg-gradient-to-l from-transparent to-[#EEEEEE] z-10" />
     <div class="fade-in-right grid grid-rows-3 grid-flow-col gap-4 p-2 px-4 md:p-8 md:px-14 w-full max-w-7xl mx-auto horizontal-scroll">
-      <InfoCard />
-      <ResumeCard />
-      <NiChartCard />
-      <GalaxyCard />
-      <InjuryCard />
-      <LinkedInCard />
-      <ChessCard />
-      <ShoeCard />
-      <GithubCard />
+  <ResumeCard />
+  <InfoCard onEdit={() => openEditModal('forkidsbykids')} text={cardContent.forkidsbykids.text} photo={cardContent.info.photo}/>
+  <ForKidsByKidsCard onEdit={() => openEditModal('forkidsbykids')} text={cardContent.forkidsbykids.text} photo={cardContent.forkidsbykids.photo} />
+  <NiChartCard onEdit={() => openEditModal('nichart')} text={cardContent.nichart.text} photo={cardContent.nichart.photo} />
+  <!--<GalaxyCard onEdit={() => openEditModal('galaxy')} text={cardContent.galaxy.text} photo={cardContent.galaxy.photo} /> -->
+  <InjuryCard onEdit={() => openEditModal('injury')} text={cardContent.injury.text} photo={cardContent.injury.photo} />
+  <LinkedInCard onEdit={() => openEditModal('linkedin')} text={cardContent.linkedin.text} photo={cardContent.linkedin.photo} />
+  <ChessCard onEdit={() => openEditModal('chess')} text={cardContent.chess.text} photo={cardContent.chess.photo} />
+  <ShoeCard />
+  <GithubCard onEdit={() => openEditModal('github')} text={cardContent.github.text} photo={cardContent.github.photo} />
+  <Modal
+    show={showModal}
+    text={modalText}
+    photo={modalPhoto}
+    setText={v => modalText = v}
+    setPhoto={v => modalPhoto = v}
+    onClose={closeEditModal}
+    onSave={saveEditModal}
+  />
       <EmptyCard />
       <EmptyCard />
       <EmptyCard soft={true} />
@@ -109,9 +157,11 @@
     </a>
 
     <p
-      class="absolute left-0 right-0 bottom-2 sm:bottom-6 text-sm font-medium text-center whitespace-nowrap text-[#010313]/30"
+      class="absolute left-0 right-0 sm:bottom-4 text-sm font-medium text-center whitespace-nowrap text-[#010313]/30"
     >
-      not affiliated with nintendo
+      inspired by the wii menu
+      <br>
+      developed by adi khurana
     </p>
 
     <div class="flex">

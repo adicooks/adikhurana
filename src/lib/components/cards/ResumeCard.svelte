@@ -13,6 +13,7 @@
   function closeModal() {
     showModal = false;
   }
+
 </script>
 
 <Card additionalClasses="bg-[#F7F7F7] cursor-pointer">
@@ -47,11 +48,27 @@
         on:click={closeModal}>&times;</button
       >
       <iframe
+        title="Adi Khurana Resume"
         src={`${resumeUrl}#toolbar=0&navpanes=0&scrollbar=0`}
         class="w-full h-full border-none rounded-md bg-white"
         frameborder="0"
         style="background-color: white;"
       ></iframe>
+    </div>
+  </div>
+{/if}
+
+{#if showModal}
+  <div class="modal-backdrop" role="dialog" aria-modal="true" on:click={() => (showModal = false)}>
+    <div class="modal-content modal-5050" on:click|stopPropagation tabindex="0">
+      <button class="modal-close" on:click={() => (showModal = false)} aria-label="Close">×</button>
+      <div class="modal-5050-inner">
+        <div class="modal-5050-left modal-about-scroll">
+          <h2 class="text-2xl font-bold mb-4">About</h2>
+          <pre class="whitespace-pre-wrap text-base text-gray-700">hello im adi</pre>
+        </div>
+        <div class="modal-5050-right"></div>
+      </div>
     </div>
   </div>
 {/if}

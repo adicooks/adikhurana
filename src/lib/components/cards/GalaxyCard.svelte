@@ -1,15 +1,16 @@
+
 <script>
   import Card from "../Card.svelte";
-  import GalaxyBg from "$lib/assets/galaxygmails-bg.png";
+  export let text = "bots approved here";
+  export let photo = "";
+  export let onEdit = () => {};
 </script>
 
 <Card
-  href="https://www.poof.io/@galaxygmails"
   additionalClasses="hover:scale-100 bg-[#322074]"
+  onClick={onEdit}
 >
-  <div
-    class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full"
-  >
+  <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Gmail"
@@ -47,12 +48,14 @@
     <p
       class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition"
     >
-      bots approved here
+      {text}
     </p>
-    <img
-      class="absolute -top-12 -right-10 group-hover:-translate-y-2 transition-transform scale-[1.75]"
-      src={GalaxyBg}
-      alt=""
-    />
+    {#if photo}
+      <img
+        class="absolute -top-12 -right-10 group-hover:-translate-y-2 transition-transform scale-[1.75]"
+        src={photo}
+        alt=""
+      />
+    {/if}
   </div>
 </Card>
