@@ -14,6 +14,8 @@
   import ResumeCard from "$lib/components/cards/ResumeCard.svelte";
   import InfoCard from "$lib/components/InfoCard.svelte";
   import ForKidsByKidsCard from "$lib/components/ForKidsByKidsCard.svelte";
+  import HindiCard from "$lib/components/cards/HindiCard.svelte";
+  import ScienceCard from "$lib/components/cards/ScienceCard.svelte";
   import Modal from "$lib/components/Modal.svelte";
 
   import Email from "$lib/assets/email.svg";
@@ -25,6 +27,8 @@
   import PennBG     from "$lib/assets/penn-bg.jpeg";
   import TeachingBG from "$lib/assets/teaching.jpg";
   import InfoBG     from "$lib/assets/adi_pic.jpg";
+  import Iccr    from "$lib/assets/iccr.jpg";
+  import ScienceBG from "$lib/assets/sciencebg.jpg";
 
   let showModal = false;
   let modalCardId: string | null = null;
@@ -40,6 +44,8 @@
     nichart:      { text: "tackling alzheimer's with ai",   photo: PennBG },
     forkidsbykids:{ text: "building for kids by kids",      photo: TeachingBG },
     info:         { text: "about",                           photo: InfoBG },
+    hindi:       { text: "representing india",                           photo: Iccr },
+    science:     { text: "exploring ideas thru science",  photo: ScienceBG },
   };
 
   function openEditModal(cardId: string) {
@@ -130,11 +136,25 @@
         photo={cardContent.forkidsbykids.photo}
       />
 
-      <NiChartCard
+       <NiChartCard
         onEdit={() => openEditModal('nichart')}
         text={cardContent.nichart.text}
         photo={cardContent.nichart.photo}
       />
+
+      <HindiCard
+        onEdit={() => openEditModal('hindi')}
+        text={cardContent.hindi.text}
+        photo={cardContent.hindi.photo}
+      />
+
+      <ScienceCard
+        onEdit={() => openEditModal('science')}
+        text={cardContent.science.text}
+        photo={cardContent.science.photo}
+      />
+
+
 
       <!--
       <GalaxyCard
@@ -150,17 +170,13 @@
         photo={cardContent.injury.photo}
       />
 
-      <LinkedInCard
-        onEdit={() => openEditModal('linkedin')}
-        text={cardContent.linkedin.text}
-        photo={cardContent.linkedin.photo}
-      />
 
-      <ChessCard
+
+      <!-- <ChessCard
         onEdit={() => openEditModal('chess')}
         text={cardContent.chess.text}
         photo={cardContent.chess.photo}
-      />
+      /> -->
 
       <ShoeCard />
 
@@ -168,6 +184,12 @@
         onEdit={() => openEditModal('github')}
         text={cardContent.github.text}
         photo={cardContent.github.photo}
+      />
+
+      <LinkedInCard
+        onEdit={() => openEditModal('linkedin')}
+        text={cardContent.linkedin.text}
+        photo={cardContent.linkedin.photo}
       />
 
       <!-- Edit modal shared by all cards -->

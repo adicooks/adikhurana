@@ -1,12 +1,11 @@
 <script>
   import Card from "../Card.svelte";
   import JordanBackground from "$lib/assets/jordan-bg.jpg";
-  let showModal = false;
 </script>
 
 <Card
+  href="https://adicooks.com/"
   additionalClasses="hover:scale-100 bg-[#010313]"
-  on:click={() => (showModal = true)}
 >
   <div
     class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full relative group"
@@ -46,18 +45,3 @@
     />
   </div>
 </Card>
-
-{#if showModal}
-  <div class="modal-backdrop" role="dialog" aria-modal="true" on:click={() => (showModal = false)}>
-    <div class="modal-content modal-5050" on:click|stopPropagation tabindex="-1">
-      <button class="modal-close" on:click={() => (showModal = false)} aria-label="Close">×</button>
-      <div class="modal-5050-inner">
-        <div class="modal-5050-left modal-about-scroll">
-          <h2 class="text-2xl font-bold mb-4">About</h2>
-          <pre class="whitespace-pre-wrap text-base text-gray-700">hello im adi</pre>
-        </div>
-        <div class="modal-5050-right"></div>
-      </div>
-    </div>
-  </div>
-{/if}

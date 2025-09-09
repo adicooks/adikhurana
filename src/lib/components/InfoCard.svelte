@@ -8,7 +8,7 @@
 
   const aboutDescription = `I am entrepreneur with passion for technology, public safety and teaching young students.
 
-At age 12, I launched a sneaker reselling business that grew into six-figure annual sales with 3K+ Discord community members. Recently, I filed for a patent associated with novel gun threat detection technology, published peer-reviewed research papers on public safety and eldercare, and lead free coding and AI camps for elementary and middle school students to inspire the next generation of builders.
+At age 12, I launched a sneaker reselling business that grew into six-figure annual sales with 3,000+ Discord community members. Recently, I filed for a patent associated with novel gun threat detection technology, published peer-reviewed research papers on public safety and eldercare, and lead free coding and AI camps for elementary and middle school students to inspire the next generation of builders.
 
 I am fortunate to have an opportunity to collaborate with researchers at Penn’s Injury Science Center on public safety initiatives and at the Perelman School of Medicine on an AI-powered neuroimaging app during my internships.
 
