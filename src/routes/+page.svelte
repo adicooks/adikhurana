@@ -3,6 +3,7 @@
   import EmptyCard from "$lib/components/EmptyCard.svelte";
   import MoreSoonCard from "$lib/components/MoreSoonCard.svelte";
   import { onMount } from "svelte";
+
   import ShoeCard from "$lib/components/cards/ShoeCard.svelte";
   import LinkedInCard from "$lib/components/cards/LinkedInCard.svelte";
   import InjuryCard from "$lib/components/cards/InjuryCard.svelte";
@@ -14,25 +15,37 @@
   import InfoCard from "$lib/components/InfoCard.svelte";
   import ForKidsByKidsCard from "$lib/components/ForKidsByKidsCard.svelte";
   import Modal from "$lib/components/Modal.svelte";
+
+  import Email from "$lib/assets/email.svg";
+
+  // ✅ Import images from $lib so Vite bundles them correctly in production
+  import GalaxyBG   from "$lib/assets/galaxygmails-bg.png";
+  import HeatmapSVG from "$lib/assets/heatmap.svg";
+  import LinkedBG   from "$lib/assets/linkedin-bg.jpeg";
+  import PiscBG     from "$lib/assets/pisc-bg.png";
+  import PennBG     from "$lib/assets/penn-bg.jpeg";
+  import TeachingBG from "$lib/assets/teaching.jpg";
+  import InfoBG     from "$lib/assets/adi_pic.jpg";
+
   // Modal state for editing card content
   let showModal = false;
-  let modalCardId = null;
+  let modalCardId: string | null = null;
   let modalText = "";
   let modalPhoto = "";
 
-  // Store unique content for each card by id
-  let cardContent = {
-    chess: { text: "playing for mate", photo: "https://images3.alphacoders.com/189/thumb-1920-189859.jpg" },
-    galaxy: { text: "bots approved here", photo: "/src/lib/assets/galaxygmails-bg.png" },
-    github: { text: "pip install code", photo: "/src/lib/assets/heatmap.svg" },
-    linkedin: { text: "my resume, but cooler", photo: "/src/lib/assets/linkedin-bg.jpeg" },
-    injury: { text: "injury trends decoded", photo: "/src/lib/assets/pisc-bg.png" },
-    nichart: { text: "tackling alzheimer's with ai", photo: "/src/lib/assets/penn-bg.jpeg" },
-    forkidsbykids: { text: "building for kids by kids", photo: "/src/lib/assets/teaching.jpg" },
-    info: { text: "tackling alzheimer's with ai", photo: "/src/lib/assets/adi_pic.jpg" },
+  // Store unique content for each card by id (use imported assets instead of /src/... strings)
+  let cardContent: Record<string, { text: string; photo: string }> = {
+    chess:        { text: "playing for mate",               photo: "https://images3.alphacoders.com/189/thumb-1920-189859.jpg" },
+    galaxy:       { text: "bots approved here",             photo: GalaxyBG },
+    github:       { text: "pip install code",               photo: HeatmapSVG },
+    linkedin:     { text: "my resume, but cooler",          photo: LinkedBG },
+    injury:       { text: "injury trends decoded",          photo: PiscBG },
+    nichart:      { text: "tackling alzheimer's with ai",   photo: PennBG },
+    forkidsbykids:{ text: "building for kids by kids",      photo: TeachingBG },
+    info:         { text: "about",                           photo: InfoBG },
   };
 
-  function openEditModal(cardId) {
+  function openEditModal(cardId: string) {
     modalCardId = cardId;
     modalText = cardContent[cardId]?.text || "";
     modalPhoto = cardContent[cardId]?.photo || "";
@@ -50,7 +63,6 @@
     }
     closeEditModal();
   }
-  import Email from "$lib/assets/email.svg";
 
   let currentTime: string = "";
   let audio: HTMLAudioElement | null = null;
@@ -84,12 +96,10 @@
     audio.loop = true;
 
     setTimeout(() => {
-      audio.play().catch((e) => console.warn("Autoplay blocked:", e));
+      audio!.play().catch((e) => console.warn("Autoplay blocked:", e));
     }, 1000);
 
-    const playOnInteraction = () => {
-      playAudio();
-    };
+    const playOnInteraction = () => playAudio();
 
     window.addEventListener("mousemove", playOnInteraction, { once: true });
     window.addEventListener("click", playOnInteraction, { once: true });
@@ -106,26 +116,74 @@
   <div class="flex flex-col justify-start items-start m-auto max-w-7xl relative w-full">
     <div class="hidden md:block absolute top-0 bottom-0 right-0 w-14 bg-gradient-to-r from-transparent to-[#EEEEEE] z-10" />
     <div class="hidden md:block absolute top-0 bottom-0 left-0 w-14 bg-gradient-to-l from-transparent to-[#EEEEEE] z-10" />
+
     <div class="fade-in-right grid grid-rows-3 grid-flow-col gap-4 p-2 px-4 md:p-8 md:px-14 w-full max-w-7xl mx-auto horizontal-scroll">
-  <ResumeCard />
-  <InfoCard onEdit={() => openEditModal('forkidsbykids')} text={cardContent.forkidsbykids.text} photo={cardContent.info.photo}/>
-  <ForKidsByKidsCard onEdit={() => openEditModal('forkidsbykids')} text={cardContent.forkidsbykids.text} photo={cardContent.forkidsbykids.photo} />
-  <NiChartCard onEdit={() => openEditModal('nichart')} text={cardContent.nichart.text} photo={cardContent.nichart.photo} />
-  <!--<GalaxyCard onEdit={() => openEditModal('galaxy')} text={cardContent.galaxy.text} photo={cardContent.galaxy.photo} /> -->
-  <InjuryCard onEdit={() => openEditModal('injury')} text={cardContent.injury.text} photo={cardContent.injury.photo} />
-  <LinkedInCard onEdit={() => openEditModal('linkedin')} text={cardContent.linkedin.text} photo={cardContent.linkedin.photo} />
-  <ChessCard onEdit={() => openEditModal('chess')} text={cardContent.chess.text} photo={cardContent.chess.photo} />
-  <ShoeCard />
-  <GithubCard onEdit={() => openEditModal('github')} text={cardContent.github.text} photo={cardContent.github.photo} />
-  <Modal
-    show={showModal}
-    text={modalText}
-    photo={modalPhoto}
-    setText={v => modalText = v}
-    setPhoto={v => modalPhoto = v}
-    onClose={closeEditModal}
-    onSave={saveEditModal}
-  />
+      <ResumeCard />
+
+      <!-- Info card uses its own photo (imported) -->
+      <InfoCard
+        onEdit={() => openEditModal('forkidsbykids')}
+        text={cardContent.info.text}
+        photo={cardContent.info.photo}
+      />
+
+      <ForKidsByKidsCard
+        onEdit={() => openEditModal('forkidsbykids')}
+        text={cardContent.forkidsbykids.text}
+        photo={cardContent.forkidsbykids.photo}
+      />
+
+      <NiChartCard
+        onEdit={() => openEditModal('nichart')}
+        text={cardContent.nichart.text}
+        photo={cardContent.nichart.photo}
+      />
+
+      {/*
+      <GalaxyCard
+        onEdit={() => openEditModal('galaxy')}
+        text={cardContent.galaxy.text}
+        photo={cardContent.galaxy.photo}
+      />
+      */}
+
+      <InjuryCard
+        onEdit={() => openEditModal('injury')}
+        text={cardContent.injury.text}
+        photo={cardContent.injury.photo}
+      />
+
+      <LinkedInCard
+        onEdit={() => openEditModal('linkedin')}
+        text={cardContent.linkedin.text}
+        photo={cardContent.linkedin.photo}
+      />
+
+      <ChessCard
+        onEdit={() => openEditModal('chess')}
+        text={cardContent.chess.text}
+        photo={cardContent.chess.photo}
+      />
+
+      <ShoeCard />
+
+      <GithubCard
+        onEdit={() => openEditModal('github')}
+        text={cardContent.github.text}
+        photo={cardContent.github.photo}
+      />
+
+      <!-- Edit modal shared by all cards -->
+      <Modal
+        show={showModal}
+        text={modalText}
+        photo={modalPhoto}
+        setText={(v) => (modalText = v)}
+        setPhoto={(v) => (modalPhoto = v)}
+        onClose={closeEditModal}
+        onSave={saveEditModal}
+      />
+
       <EmptyCard />
       <EmptyCard />
       <EmptyCard soft={true} />
@@ -160,7 +218,7 @@
       class="absolute left-0 right-0 sm:bottom-4 text-sm font-medium text-center whitespace-nowrap text-[#010313]/30"
     >
       inspired by the wii menu
-      <br>
+      <br />
       developed by adi khurana
     </p>
 
@@ -188,6 +246,7 @@
 
     <div class="w-full bg-[#DBDCDD] h-[40px] sm:min-h-[70px]" />
   </div>
+
   <div class="block sm:hidden w-full h-28 bg-[#DBDCDD]" />
 </main>
 
