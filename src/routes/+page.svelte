@@ -123,7 +123,6 @@
     <div class="fade-in-right grid grid-rows-3 grid-flow-col gap-4 p-2 px-4 md:p-8 md:px-14 w-full max-w-7xl mx-auto horizontal-scroll">
       <ResumeCard />
 
-      <!-- Info card uses its own photo (imported) -->
       <InfoCard
         onEdit={() => openEditModal('forkidsbykids')}
         text={cardContent.info.text}
@@ -164,19 +163,8 @@
       />
       -->
 
-      <InjuryCard
-        onEdit={() => openEditModal('injury')}
-        text={cardContent.injury.text}
-        photo={cardContent.injury.photo}
-      />
 
-
-
-      <!-- <ChessCard
-        onEdit={() => openEditModal('chess')}
-        text={cardContent.chess.text}
-        photo={cardContent.chess.photo}
-      /> -->
+      <ChessCard/>
 
       <ShoeCard/>
 
@@ -186,13 +174,18 @@
         photo={cardContent.github.photo}
       />
 
+      <InjuryCard
+        onEdit={() => openEditModal('injury')}
+        text={cardContent.injury.text}
+        photo={cardContent.injury.photo}
+      />
+
       <LinkedInCard
         onEdit={() => openEditModal('linkedin')}
         text={cardContent.linkedin.text}
         photo={cardContent.linkedin.photo}
       />
 
-      <!-- Edit modal shared by all cards -->
       <Modal
         show={showModal}
         text={modalText}

@@ -69,7 +69,6 @@ After SeniorConnect, I developed AlertNow, a patent-pending, low-cost, real-time
 
         <div class="modal-5050-right">
             <img src="/pictures/Adi Coriell seniorconnect.png" alt="adi_pic" class="modal-photo" />
-            <img src="/pictures/hindi-Adi JSHS.png" alt="Adi Governor" class="modal-photo" />
             <img src="/pictures/Adi-dvsf-2025-pic.jpg" alt="iccr" class="modal-photo" />
             <img src="/pictures/award.jpg" alt="IMG_6744" class="modal-photo" />
             <img src="/pictures/dvsf.jpg" alt="Wagah" class="modal-photo" />

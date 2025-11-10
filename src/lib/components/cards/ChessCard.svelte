@@ -2,13 +2,14 @@
 <script>
   import Card from "../Card.svelte";
   export let text = "playing for mate";
-  export let photo = "https://images3.alphacoders.com/189/thumb-1920-189859.jpg";
-  export let onEdit = () => {};
+  export let photo = "https://i.pinimg.com/736x/6d/b1/c5/6db1c5a9b2bff8df0a41ae382c83feec.jpg";
+  const url = "https://www.chess.com/member/adicooks";
+  const go = () => window.open(url, "_blank", "noopener");
 </script>
 
 <Card
-  additionalClasses="hover:scale-100 bg-[#000000]"
-  onClick={onEdit}
+  additionalClasses="hover:scale-100 bg-[#0b0b0b]"
+  onClick={go}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full">
     <svg

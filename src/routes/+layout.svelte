@@ -2,6 +2,7 @@
   import "../app.css";
   import { onMount } from "svelte";
   import Cursor from "$lib/components/Cursor.svelte";
+  import ScrollingBanner from "$lib/components/ScrollingBanner.svelte";
   import { dev } from "$app/environment";
   import { inject } from "@vercel/analytics";
 
@@ -20,6 +21,7 @@
   <meta name="description" content="fun guy" />
 </svelte:head>
 <div class="crt">
+  <ScrollingBanner text="CLICK THE BOXES TO LEARN MORE • CLICK THE PLAY BUTTON FOR WII MUSIC" />
   <Cursor />
   <slot />
 </div>
