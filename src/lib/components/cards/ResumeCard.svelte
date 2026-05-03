@@ -2,12 +2,12 @@
   import Card from "../Card.svelte";
   import Disc from "$lib/assets/disc.png";
 
-  import ResumePDF from "$lib/assets/Adi_Khurana_Resume.pdf";
+  const resumeHref = "/adi-khurana-resume";
 </script>
 
 <Card additionalClasses="bg-[#F7F7F7] cursor-pointer">
   <a
-    href={ResumePDF}
+    href={resumeHref}
     target="_blank"
     rel="noopener noreferrer"
     class="flex flex-col items-center justify-center relative w-full h-full"
