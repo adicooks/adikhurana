@@ -1,8 +1,16 @@
 <script>
+  import { track } from "@vercel/analytics";
   import Card from "../Card.svelte";
   import Disc from "$lib/assets/disc.png";
 
   const resumeHref = "/adi-khurana-resume";
+
+  function trackResumeClick() {
+    track("Resume Link Clicked", {
+      target: resumeHref,
+      source: "home_card"
+    });
+  }
 </script>
 
 <Card additionalClasses="bg-[#F7F7F7] cursor-pointer">
@@ -10,6 +18,7 @@
     href={resumeHref}
     target="_blank"
     rel="noopener noreferrer"
+    on:click={trackResumeClick}
     class="flex flex-col items-center justify-center relative w-full h-full"
   >
     <img
