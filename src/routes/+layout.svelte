@@ -7,9 +7,9 @@
   import Cursor from "$lib/components/Cursor.svelte";
   import Login from "$lib/components/Login.svelte";
   import ScrollingBanner from "$lib/components/ScrollingBanner.svelte";
-  import { inject } from "@vercel/analytics";
+  import { injectAnalytics } from "@vercel/analytics/sveltekit";
 
-  inject({ mode: dev ? "development" : "production" });
+  injectAnalytics({ mode: dev ? "development" : "production" });
 
   let authReady = !browser;
 
