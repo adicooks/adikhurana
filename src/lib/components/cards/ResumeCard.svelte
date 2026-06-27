@@ -1,11 +1,18 @@
 <script>
   import { track } from "@vercel/analytics";
+  import { sendResumeEvent } from "$lib/resumeEvent";
   import Card from "../Card.svelte";
   import Disc from "$lib/assets/disc.png";
 
   const resumeHref = "/adi-khurana-resume";
 
   function trackResumeClick() {
+    sendResumeEvent({
+      eventName: "resume_click",
+      route: resumeHref,
+      source: "home_card"
+    });
+
     track("Resume Link Clicked", {
       target: resumeHref,
       source: "home_card"

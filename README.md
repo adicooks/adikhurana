@@ -1,5 +1,16 @@
 # create-svelte
 
+## Resume analytics
+
+The app records resume clicks, resume page views, and time-on-page events through
+`/api/resume-event`, then shows them at `/resume-stats`.
+
+Required Vercel environment variables:
+
+- `DATABASE_URL`: Neon/Postgres connection string. The first event creates the
+  `resume_analytics_events` table automatically.
+- `RESUME_STATS_PASSWORD`: Password for the private `/resume-stats` dashboard.
+
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
 ## Creating a project

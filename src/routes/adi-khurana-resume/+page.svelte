@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { track } from "@vercel/analytics";
+  import { sendResumeEvent } from "$lib/resumeEvent";
 
   type Geo = {
     city: string;
@@ -40,6 +41,12 @@
       country: geo.country,
       region: geo.region
     });
+
+    sendResumeEvent({
+      eventName: "resume_duration",
+      durationSeconds: seconds,
+      durationBucket: durationBucket(seconds)
+    });
   }
 
   function handleVisibilityChange() {
@@ -59,9 +66,19 @@
           country: geo.country,
           region: geo.region
         });
+
+        sendResumeEvent({
+          eventName: "resume_view",
+          source: "direct_resume_page"
+        });
       })
       .catch(() => {
         track("Resume Page Viewed", geo);
+
+        sendResumeEvent({
+          eventName: "resume_view",
+          source: "direct_resume_page"
+        });
       });
 
     window.addEventListener("pagehide", trackDuration);

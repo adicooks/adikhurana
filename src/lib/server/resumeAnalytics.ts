@@ -1,0 +1,242 @@
+import { neon } from "@neondatabase/serverless";
+import { env } from "$env/dynamic/private";
+
+export type ResumeEventName = "resume_click" | "resume_view" | "resume_duration";
+
+export type ResumeAnalyticsEvent = {
+  id: number;
+  event_name: ResumeEventName;
+  session_id: string | null;
+  route: string | null;
+  source: string | null;
+  duration_seconds: number | null;
+  duration_bucket: string | null;
+  city: string | null;
+  region: string | null;
+  country: string | null;
+  referrer: string | null;
+  user_agent: string | null;
+  created_at: string;
+};
+
+export type ResumeAnalyticsSummary = {
+  totalEvents: number;
+  totalViews: number;
+  totalClicks: number;
+  totalDurations: number;
+  uniqueSessions: number;
+  averageDurationSeconds: number;
+  byCountry: Array<{ country: string; count: number }>;
+  byCity: Array<{ city: string; region: string; country: string; count: number }>;
+  durationBuckets: Array<{ bucket: string; count: number }>;
+  recentEvents: ResumeAnalyticsEvent[];
+};
+
+type IncomingResumeEvent = {
+  eventName?: string;
+  sessionId?: string;
+  route?: string;
+  source?: string;
+  durationSeconds?: number;
+  durationBucket?: string;
+  referrer?: string;
+};
+
+const VALID_EVENT_NAMES = new Set(["resume_click", "resume_view", "resume_duration"]);
+let tableReady: Promise<void> | null = null;
+
+function getDatabaseUrl() {
+  return env.DATABASE_URL || env.POSTGRES_URL || "";
+}
+
+function getSql() {
+  const databaseUrl = getDatabaseUrl();
+  if (!databaseUrl) return null;
+  return neon(databaseUrl);
+}
+
+export function isResumeAnalyticsConfigured() {
+  return Boolean(getDatabaseUrl());
+}
+
+function cleanString(value: unknown, fallback = "") {
+  if (typeof value !== "string") return fallback;
+  return value.slice(0, 500);
+}
+
+function cleanNullableString(value: unknown) {
+  const cleaned = cleanString(value).trim();
+  return cleaned || null;
+}
+
+function decodeHeader(value: string | null) {
+  if (!value) return null;
+
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+async function ensureTable() {
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  tableReady ??= sql`
+    CREATE TABLE IF NOT EXISTS resume_analytics_events (
+      id SERIAL PRIMARY KEY,
+      event_name TEXT NOT NULL,
+      session_id TEXT,
+      route TEXT,
+      source TEXT,
+      duration_seconds INTEGER,
+      duration_bucket TEXT,
+      city TEXT,
+      region TEXT,
+      country TEXT,
+      referrer TEXT,
+      user_agent TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `.then(() => undefined);
+
+  await tableReady;
+}
+
+export async function recordResumeEvent(payload: IncomingResumeEvent, request: Request) {
+  const eventName = cleanString(payload.eventName) as ResumeEventName;
+
+  if (!VALID_EVENT_NAMES.has(eventName)) {
+    throw new Error("Invalid resume analytics event.");
+  }
+
+  const durationSeconds =
+    typeof payload.durationSeconds === "number" && Number.isFinite(payload.durationSeconds)
+      ? Math.max(0, Math.round(payload.durationSeconds))
+      : null;
+
+  const city = decodeHeader(request.headers.get("x-vercel-ip-city"));
+  const region = decodeHeader(request.headers.get("x-vercel-ip-country-region"));
+  const country = decodeHeader(request.headers.get("x-vercel-ip-country"));
+  const userAgent = request.headers.get("user-agent");
+
+  await ensureTable();
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  await sql`
+    INSERT INTO resume_analytics_events (
+      event_name,
+      session_id,
+      route,
+      source,
+      duration_seconds,
+      duration_bucket,
+      city,
+      region,
+      country,
+      referrer,
+      user_agent
+    )
+    VALUES (
+      ${eventName},
+      ${cleanNullableString(payload.sessionId)},
+      ${cleanNullableString(payload.route)},
+      ${cleanNullableString(payload.source)},
+      ${durationSeconds},
+      ${cleanNullableString(payload.durationBucket)},
+      ${city},
+      ${region},
+      ${country},
+      ${cleanNullableString(payload.referrer)},
+      ${userAgent}
+    )
+  `;
+}
+
+function increment(map: Map<string, number>, key: string) {
+  map.set(key, (map.get(key) || 0) + 1);
+}
+
+function topEntries(map: Map<string, number>, limit = 10) {
+  return Array.from(map.entries())
+    .map(([key, count]) => ({ key, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
+}
+
+export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummary> {
+  await ensureTable();
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  const rows = (await sql`
+    SELECT
+      id,
+      event_name,
+      session_id,
+      route,
+      source,
+      duration_seconds,
+      duration_bucket,
+      city,
+      region,
+      country,
+      referrer,
+      user_agent,
+      created_at
+    FROM resume_analytics_events
+    ORDER BY created_at DESC
+    LIMIT 250
+  `) as ResumeAnalyticsEvent[];
+
+  const sessions = new Set<string>();
+  const byCountry = new Map<string, number>();
+  const byCity = new Map<string, number>();
+  const durationBuckets = new Map<string, number>();
+  let durationTotal = 0;
+  let durationCount = 0;
+
+  for (const event of rows) {
+    if (event.session_id) sessions.add(event.session_id);
+
+    if (event.country) increment(byCountry, event.country);
+
+    if (event.city || event.region || event.country) {
+      increment(
+        byCity,
+        [event.city || "unknown", event.region || "unknown", event.country || "unknown"].join("|")
+      );
+    }
+
+    if (event.duration_bucket) increment(durationBuckets, event.duration_bucket);
+
+    if (typeof event.duration_seconds === "number") {
+      durationTotal += event.duration_seconds;
+      durationCount += 1;
+    }
+  }
+
+  return {
+    totalEvents: rows.length,
+    totalViews: rows.filter((event) => event.event_name === "resume_view").length,
+    totalClicks: rows.filter((event) => event.event_name === "resume_click").length,
+    totalDurations: rows.filter((event) => event.event_name === "resume_duration").length,
+    uniqueSessions: sessions.size,
+    averageDurationSeconds: durationCount ? Math.round(durationTotal / durationCount) : 0,
+    byCountry: topEntries(byCountry).map(({ key, count }) => ({ country: key, count })),
+    byCity: topEntries(byCity).map(({ key, count }) => {
+      const [city, region, country] = key.split("|");
+      return { city, region, country, count };
+    }),
+    durationBuckets: topEntries(durationBuckets).map(({ key, count }) => ({ bucket: key, count })),
+    recentEvents: rows
+  };
+}

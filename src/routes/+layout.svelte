@@ -13,7 +13,9 @@
 
   let authReady = !browser;
 
-  $: isPublicResumeRoute = $page.url.pathname.startsWith("/adi-khurana-resume");
+  $: isPublicRoute =
+    $page.url.pathname.startsWith("/adi-khurana-resume") ||
+    $page.url.pathname.startsWith("/resume-stats");
 
   onMount(() => {
     hydrateAuth();
@@ -30,7 +32,7 @@
   <title>adi</title>
   <meta name="description" content="fun guy" />
 </svelte:head>
-{#if isPublicResumeRoute}
+{#if isPublicRoute}
   <slot />
 {:else if authReady && $isAuthenticated}
   <div class="crt">
