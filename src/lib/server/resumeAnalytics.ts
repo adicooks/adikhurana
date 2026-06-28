@@ -37,7 +37,6 @@ export type ResumeAnalyticsSummary = {
   totalEvents: number;
   totalViews: number;
   totalClicks: number;
-  totalDurations: number;
   uniqueResumeViewers: number;
   uniqueSessions: number;
   averageDurationSeconds: number;
@@ -96,29 +95,102 @@ function decodeHeader(value: string | null) {
   }
 }
 
+async function migrateDurationEvents() {
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  await sql`
+    WITH matched AS (
+      SELECT
+        d.id AS duration_id,
+        v.id AS view_id,
+        d.duration_seconds,
+        d.duration_bucket,
+        d.created_at
+      FROM resume_analytics_events d
+      JOIN LATERAL (
+        SELECT id
+        FROM resume_analytics_events v
+        WHERE v.event_name = 'resume_view'
+          AND v.session_id IS NOT DISTINCT FROM d.session_id
+          AND v.created_at <= d.created_at
+        ORDER BY v.created_at DESC
+        LIMIT 1
+      ) v ON true
+      WHERE d.event_name = 'resume_duration'
+    ),
+    latest AS (
+      SELECT DISTINCT ON (view_id)
+        view_id,
+        duration_seconds,
+        duration_bucket
+      FROM matched
+      ORDER BY view_id, created_at DESC
+    )
+    UPDATE resume_analytics_events v
+    SET
+      duration_seconds = COALESCE(latest.duration_seconds, v.duration_seconds),
+      duration_bucket = COALESCE(latest.duration_bucket, v.duration_bucket)
+    FROM latest
+    WHERE v.id = latest.view_id
+  `;
+
+  await sql`
+    WITH matched AS (
+      SELECT d.id AS duration_id
+      FROM resume_analytics_events d
+      JOIN LATERAL (
+        SELECT id
+        FROM resume_analytics_events v
+        WHERE v.event_name = 'resume_view'
+          AND v.session_id IS NOT DISTINCT FROM d.session_id
+          AND v.created_at <= d.created_at
+        ORDER BY v.created_at DESC
+        LIMIT 1
+      ) v ON true
+      WHERE d.event_name = 'resume_duration'
+    )
+    DELETE FROM resume_analytics_events
+    WHERE id IN (SELECT duration_id FROM matched)
+  `;
+
+  await sql`
+    UPDATE resume_analytics_events
+    SET
+      event_name = 'resume_view',
+      source = COALESCE(source, 'duration_only')
+    WHERE event_name = 'resume_duration'
+  `;
+}
+
 async function ensureTable() {
   const sql = getSql();
   if (!sql) {
     throw new Error("Resume analytics database is not configured.");
   }
 
-  tableReady ??= sql`
-    CREATE TABLE IF NOT EXISTS resume_analytics_events (
-      id SERIAL PRIMARY KEY,
-      event_name TEXT NOT NULL,
-      session_id TEXT,
-      route TEXT,
-      source TEXT,
-      duration_seconds INTEGER,
-      duration_bucket TEXT,
-      city TEXT,
-      region TEXT,
-      country TEXT,
-      referrer TEXT,
-      user_agent TEXT,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `.then(() => undefined);
+  tableReady ??= (async () => {
+    await sql`
+      CREATE TABLE IF NOT EXISTS resume_analytics_events (
+        id SERIAL PRIMARY KEY,
+        event_name TEXT NOT NULL,
+        session_id TEXT,
+        route TEXT,
+        source TEXT,
+        duration_seconds INTEGER,
+        duration_bucket TEXT,
+        city TEXT,
+        region TEXT,
+        country TEXT,
+        referrer TEXT,
+        user_agent TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `;
+    await migrateDurationEvents();
+  })();
 
   await tableReady;
 }
@@ -139,11 +211,36 @@ export async function recordResumeEvent(payload: IncomingResumeEvent, request: R
   const region = decodeHeader(request.headers.get("x-vercel-ip-country-region"));
   const country = decodeHeader(request.headers.get("x-vercel-ip-country"));
   const userAgent = request.headers.get("user-agent");
+  const sessionId = cleanNullableString(payload.sessionId);
+  const route = cleanNullableString(payload.route);
+  const source = cleanNullableString(payload.source);
+  const durationBucket = cleanNullableString(payload.durationBucket);
+  const referrer = cleanNullableString(payload.referrer);
 
   await ensureTable();
   const sql = getSql();
   if (!sql) {
     throw new Error("Resume analytics database is not configured.");
+  }
+
+  if (eventName === "resume_duration") {
+    const updatedRows = await sql`
+      UPDATE resume_analytics_events
+      SET
+        duration_seconds = ${durationSeconds},
+        duration_bucket = ${durationBucket}
+      WHERE id = (
+        SELECT id
+        FROM resume_analytics_events
+        WHERE event_name = 'resume_view'
+          AND session_id IS NOT DISTINCT FROM ${sessionId}
+        ORDER BY created_at DESC
+        LIMIT 1
+      )
+      RETURNING id
+    `;
+
+    if (updatedRows.length > 0) return;
   }
 
   await sql`
@@ -161,16 +258,16 @@ export async function recordResumeEvent(payload: IncomingResumeEvent, request: R
       user_agent
     )
     VALUES (
-      ${eventName},
-      ${cleanNullableString(payload.sessionId)},
-      ${cleanNullableString(payload.route)},
-      ${cleanNullableString(payload.source)},
+      ${eventName === "resume_duration" ? "resume_view" : eventName},
+      ${sessionId},
+      ${route},
+      ${eventName === "resume_duration" ? source || "duration_only" : source},
       ${durationSeconds},
-      ${cleanNullableString(payload.durationBucket)},
+      ${durationBucket},
       ${city},
       ${region},
       ${country},
-      ${cleanNullableString(payload.referrer)},
+      ${referrer},
       ${userAgent}
     )
   `;
@@ -326,9 +423,11 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
       );
     }
 
-    if (event.duration_bucket) increment(durationBuckets, event.duration_bucket);
+    if (event.event_name === "resume_view" && event.duration_bucket) {
+      increment(durationBuckets, event.duration_bucket);
+    }
 
-    if (typeof event.duration_seconds === "number") {
+    if (event.event_name === "resume_view" && typeof event.duration_seconds === "number") {
       durationTotal += event.duration_seconds;
       durationCount += 1;
     }
@@ -338,7 +437,6 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
     totalEvents: rows.length,
     totalViews: rows.filter((event) => event.event_name === "resume_view").length,
     totalClicks: rows.filter((event) => event.event_name === "resume_click").length,
-    totalDurations: rows.filter((event) => event.event_name === "resume_duration").length,
     uniqueResumeViewers: resumeViewers.size,
     uniqueSessions: sessions.size,
     averageDurationSeconds: durationCount ? Math.round(durationTotal / durationCount) : 0,
