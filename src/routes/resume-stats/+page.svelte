@@ -78,10 +78,14 @@
         </p>
       </section>
     {:else if data.summary}
-      <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
           <p class="text-sm font-bold text-[#010313]/45">views</p>
           <p class="mt-2 text-3xl font-bold">{data.summary.totalViews}</p>
+        </div>
+        <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
+          <p class="text-sm font-bold text-[#010313]/45">viewers</p>
+          <p class="mt-2 text-3xl font-bold">{data.summary.uniqueResumeViewers}</p>
         </div>
         <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
           <p class="text-sm font-bold text-[#010313]/45">clicks</p>

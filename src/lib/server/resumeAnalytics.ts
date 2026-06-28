@@ -24,6 +24,7 @@ export type ResumeAnalyticsSummary = {
   totalViews: number;
   totalClicks: number;
   totalDurations: number;
+  uniqueResumeViewers: number;
   uniqueSessions: number;
   averageDurationSeconds: number;
   byCountry: Array<{ country: string; count: number }>;
@@ -198,6 +199,7 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
   `) as ResumeAnalyticsEvent[];
 
   const sessions = new Set<string>();
+  const resumeViewers = new Set<string>();
   const byCountry = new Map<string, number>();
   const byCity = new Map<string, number>();
   const durationBuckets = new Map<string, number>();
@@ -205,7 +207,13 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
   let durationCount = 0;
 
   for (const event of rows) {
-    if (event.session_id) sessions.add(event.session_id);
+    if (event.session_id) {
+      sessions.add(event.session_id);
+
+      if (event.event_name === "resume_view") {
+        resumeViewers.add(event.session_id);
+      }
+    }
 
     if (event.country) increment(byCountry, event.country);
 
@@ -229,6 +237,7 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
     totalViews: rows.filter((event) => event.event_name === "resume_view").length,
     totalClicks: rows.filter((event) => event.event_name === "resume_click").length,
     totalDurations: rows.filter((event) => event.event_name === "resume_duration").length,
+    uniqueResumeViewers: resumeViewers.size,
     uniqueSessions: sessions.size,
     averageDurationSeconds: durationCount ? Math.round(durationTotal / durationCount) : 0,
     byCountry: topEntries(byCountry).map(({ key, count }) => ({ country: key, count })),
