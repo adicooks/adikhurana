@@ -187,6 +187,18 @@
 
               <p class="mt-2 truncate text-sm text-[#010313]/50">from {session.referrer}</p>
 
+              {#if !session.sessionId.startsWith("event-")}
+                <form class="mt-4" method="POST" action="?/deleteSession">
+                  <input type="hidden" name="sessionId" value={session.sessionId} />
+                  <button
+                    class="rounded-full border border-red-300 px-3 py-1 text-xs font-bold text-red-700 transition hover:bg-red-50"
+                    type="submit"
+                  >
+                    delete session
+                  </button>
+                </form>
+              {/if}
+
               <ol class="mt-4 flex flex-col gap-3">
                 {#each session.events as event}
                   <li class="flex items-center justify-between gap-3 border-l-2 border-[#010313]/20 pl-3">
@@ -217,7 +229,7 @@
           <h2 class="text-lg font-bold">Recent events</h2>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full min-w-[980px] text-left text-sm">
+          <table class="w-full min-w-[1080px] text-left text-sm">
             <thead class="bg-[#dbdcdd] text-[#010313]/60">
               <tr>
                 <th class="px-4 py-3">time</th>
@@ -226,6 +238,7 @@
                 <th class="px-4 py-3">location</th>
                 <th class="px-4 py-3">source</th>
                 <th class="px-4 py-3">referrer</th>
+                <th class="px-4 py-3">delete</th>
               </tr>
             </thead>
             <tbody>
@@ -239,10 +252,18 @@
                   </td>
                   <td class="px-4 py-3">{event.source || "-"}</td>
                   <td class="max-w-[280px] truncate px-4 py-3">{event.referrer || "-"}</td>
+                  <td class="px-4 py-3">
+                    <form method="POST" action="?/deleteEvent">
+                      <input type="hidden" name="eventId" value={event.id} />
+                      <button class="font-bold text-red-700 transition hover:text-red-500" type="submit">
+                        delete
+                      </button>
+                    </form>
+                  </td>
                 </tr>
               {:else}
                 <tr>
-                  <td class="px-4 py-6 text-[#010313]/50" colspan="6">No events yet.</td>
+                  <td class="px-4 py-6 text-[#010313]/50" colspan="7">No events yet.</td>
                 </tr>
               {/each}
             </tbody>

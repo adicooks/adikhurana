@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 import { fail, type Actions, type Cookies } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 import {
+  deleteResumeEvent,
+  deleteResumeSession,
   getResumeAnalyticsSummary,
   isResumeAnalyticsConfigured
 } from "$lib/server/resumeAnalytics";
@@ -64,6 +66,36 @@ export const actions: Actions = {
   },
   logout: async ({ cookies }) => {
     cookies.delete(AUTH_COOKIE, { path: "/resume-stats" });
+    return { success: true };
+  },
+  deleteEvent: async ({ cookies, request }) => {
+    if (!isAuthenticated(cookies)) {
+      return fail(401, { error: "Not authorized." });
+    }
+
+    const formData = await request.formData();
+    const eventId = Number(formData.get("eventId"));
+
+    if (!Number.isInteger(eventId) || eventId <= 0) {
+      return fail(400, { error: "Invalid event." });
+    }
+
+    await deleteResumeEvent(eventId);
+    return { success: true };
+  },
+  deleteSession: async ({ cookies, request }) => {
+    if (!isAuthenticated(cookies)) {
+      return fail(401, { error: "Not authorized." });
+    }
+
+    const formData = await request.formData();
+    const sessionId = String(formData.get("sessionId") || "");
+
+    if (!sessionId || sessionId.startsWith("event-")) {
+      return fail(400, { error: "Invalid session." });
+    }
+
+    await deleteResumeSession(sessionId);
     return { success: true };
   }
 };

@@ -176,6 +176,32 @@ export async function recordResumeEvent(payload: IncomingResumeEvent, request: R
   `;
 }
 
+export async function deleteResumeEvent(eventId: number) {
+  await ensureTable();
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  await sql`
+    DELETE FROM resume_analytics_events
+    WHERE id = ${eventId}
+  `;
+}
+
+export async function deleteResumeSession(sessionId: string) {
+  await ensureTable();
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  await sql`
+    DELETE FROM resume_analytics_events
+    WHERE session_id = ${sessionId}
+  `;
+}
+
 function increment(map: Map<string, number>, key: string) {
   map.set(key, (map.get(key) || 0) + 1);
 }
