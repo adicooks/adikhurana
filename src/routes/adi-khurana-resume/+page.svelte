@@ -11,7 +11,9 @@
 
   const pdfHref = "/adi-khurana-resume/pdf";
 
-  let trackedDuration = false;
+  let durationInterval: ReturnType<typeof setInterval> | undefined;
+  let trackedVercelDuration = false;
+  let lastSentDuration = 0;
   let startedAt = Date.now();
   let geo: Geo = {
     city: "unknown",
@@ -28,25 +30,33 @@
     return "5m+";
   }
 
-  function trackDuration() {
-    if (trackedDuration) return;
-
-    trackedDuration = true;
+  function sendDurationUpdate(final = false) {
     const seconds = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
+    if (seconds <= lastSentDuration && !final) return;
 
-    track("Resume Page Duration", {
-      seconds,
-      bucket: durationBucket(seconds),
-      city: geo.city,
-      country: geo.country,
-      region: geo.region
-    });
+    lastSentDuration = seconds;
+
+    if (final && !trackedVercelDuration) {
+      trackedVercelDuration = true;
+
+      track("Resume Page Duration", {
+        seconds,
+        bucket: durationBucket(seconds),
+        city: geo.city,
+        country: geo.country,
+        region: geo.region
+      });
+    }
 
     sendResumeEvent({
       eventName: "resume_duration",
       durationSeconds: seconds,
       durationBucket: durationBucket(seconds)
     });
+  }
+
+  function trackDuration() {
+    sendDurationUpdate(true);
   }
 
   function handleVisibilityChange() {
@@ -82,11 +92,15 @@
       });
 
     window.addEventListener("pagehide", trackDuration);
+    window.addEventListener("beforeunload", trackDuration);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    durationInterval = setInterval(() => sendDurationUpdate(), 5000);
 
     return () => {
       trackDuration();
+      if (durationInterval) clearInterval(durationInterval);
       window.removeEventListener("pagehide", trackDuration);
+      window.removeEventListener("beforeunload", trackDuration);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   });
