@@ -97,20 +97,6 @@
   <meta name="description" content="Adi Khurana resume" />
 </svelte:head>
 
-<main class="h-screen w-screen bg-[#eeeeee] text-[#010313]">
-  <div class="flex h-full flex-col">
-    <header class="flex items-center justify-between gap-4 border-b border-[#c5c7ca] bg-[#f7f7f7] px-4 py-3">
-      <a class="text-sm font-bold text-[#010313]/60 transition hover:text-[#010313]" href="/">adi</a>
-      <a
-        class="rounded-full bg-[#010313] px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-500"
-        href={pdfHref}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        open pdf
-      </a>
-    </header>
-
-    <iframe class="min-h-0 flex-1" title="Adi Khurana Resume" src={pdfHref}></iframe>
-  </div>
+<main class="h-screen w-screen overflow-hidden bg-[#eeeeee]">
+  <iframe class="h-full w-full border-0" title="Adi Khurana Resume" src={pdfHref}></iframe>
 </main>
