@@ -19,6 +19,20 @@ export type ResumeAnalyticsEvent = {
   created_at: string;
 };
 
+export type ResumeSessionTimeline = {
+  sessionId: string;
+  startedAt: string;
+  endedAt: string;
+  location: string;
+  referrer: string;
+  events: Array<{
+    eventName: ResumeEventName;
+    createdAt: string;
+    durationSeconds: number | null;
+    source: string | null;
+  }>;
+};
+
 export type ResumeAnalyticsSummary = {
   totalEvents: number;
   totalViews: number;
@@ -31,6 +45,7 @@ export type ResumeAnalyticsSummary = {
   byCity: Array<{ city: string; region: string; country: string; count: number }>;
   byReferrer: Array<{ referrer: string; count: number }>;
   durationBuckets: Array<{ bucket: string; count: number }>;
+  sessionTimelines: ResumeSessionTimeline[];
   recentEvents: ResumeAnalyticsEvent[];
 };
 
@@ -183,6 +198,50 @@ function normalizeReferrer(referrer: string | null) {
   }
 }
 
+function formatLocation(event: ResumeAnalyticsEvent) {
+  const parts = [event.city, event.region, event.country].filter(Boolean);
+  return parts.length ? parts.join(", ") : "unknown";
+}
+
+function buildSessionTimelines(rows: ResumeAnalyticsEvent[]) {
+  const sessions = new Map<string, ResumeAnalyticsEvent[]>();
+
+  for (const event of rows) {
+    const sessionId = event.session_id || `event-${event.id}`;
+    const events = sessions.get(sessionId) || [];
+    events.push(event);
+    sessions.set(sessionId, events);
+  }
+
+  return Array.from(sessions.entries())
+    .map(([sessionId, events]) => {
+      const sortedEvents = [...events].sort(
+        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+      const firstEvent = sortedEvents[0];
+      const lastEvent = sortedEvents[sortedEvents.length - 1];
+      const referrerEvent = sortedEvents.find((event) => event.referrer);
+      const locationEvent =
+        sortedEvents.find((event) => event.city || event.region || event.country) || firstEvent;
+
+      return {
+        sessionId,
+        startedAt: firstEvent.created_at,
+        endedAt: lastEvent.created_at,
+        location: formatLocation(locationEvent),
+        referrer: normalizeReferrer(referrerEvent?.referrer || null),
+        events: sortedEvents.map((event) => ({
+          eventName: event.event_name,
+          createdAt: event.created_at,
+          durationSeconds: event.duration_seconds,
+          source: event.source
+        }))
+      };
+    })
+    .sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime())
+    .slice(0, 12);
+}
+
 export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummary> {
   await ensureTable();
   const sql = getSql();
@@ -264,6 +323,7 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
     }),
     byReferrer: topEntries(byReferrer).map(({ key, count }) => ({ referrer: key, count })),
     durationBuckets: topEntries(durationBuckets).map(({ key, count }) => ({ bucket: key, count })),
+    sessionTimelines: buildSessionTimelines(rows),
     recentEvents: rows
   };
 }

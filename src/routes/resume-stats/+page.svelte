@@ -20,6 +20,11 @@
     const remainingSeconds = seconds % 60;
     return `${minutes}m ${remainingSeconds}s`;
   }
+
+  function shortSessionId(sessionId: string) {
+    if (sessionId.startsWith("event-")) return "unknown session";
+    return sessionId.slice(0, 8);
+  }
 </script>
 
 <svelte:head>
@@ -160,6 +165,50 @@
               <p class="text-sm text-[#010313]/50">No duration data yet.</p>
             {/each}
           </div>
+        </div>
+      </section>
+
+      <section class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7]">
+        <div class="border-b border-[#c5c7ca] p-5">
+          <h2 class="text-lg font-bold">Session timeline</h2>
+        </div>
+        <div class="grid gap-0 md:grid-cols-2">
+          {#each data.summary.sessionTimelines as session}
+            <article class="border-b border-[#c5c7ca]/70 p-5 md:border-r">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-sm font-bold text-[#010313]/45">{formatDate(session.startedAt)}</p>
+                  <h3 class="mt-1 text-lg font-bold">{session.location}</h3>
+                </div>
+                <span class="rounded-full bg-[#dbdcdd] px-3 py-1 text-xs font-bold text-[#010313]/60">
+                  {shortSessionId(session.sessionId)}
+                </span>
+              </div>
+
+              <p class="mt-2 truncate text-sm text-[#010313]/50">from {session.referrer}</p>
+
+              <ol class="mt-4 flex flex-col gap-3">
+                {#each session.events as event}
+                  <li class="flex items-center justify-between gap-3 border-l-2 border-[#010313]/20 pl-3">
+                    <div>
+                      <p class="font-bold">{event.eventName}</p>
+                      {#if event.source}
+                        <p class="text-xs text-[#010313]/45">{event.source}</p>
+                      {/if}
+                    </div>
+                    <div class="text-right text-sm text-[#010313]/55">
+                      <p>{formatDate(event.createdAt)}</p>
+                      {#if event.durationSeconds !== null}
+                        <p class="font-bold text-[#010313]">{formatDuration(event.durationSeconds)}</p>
+                      {/if}
+                    </div>
+                  </li>
+                {/each}
+              </ol>
+            </article>
+          {:else}
+            <p class="p-5 text-sm text-[#010313]/50">No sessions yet.</p>
+          {/each}
         </div>
       </section>
 
