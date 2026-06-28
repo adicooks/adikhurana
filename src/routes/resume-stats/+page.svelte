@@ -105,7 +105,7 @@
         </div>
       </section>
 
-      <section class="grid gap-6 lg:grid-cols-3">
+      <section class="grid gap-6 lg:grid-cols-4">
         <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-5">
           <h2 class="text-lg font-bold">Countries</h2>
           <div class="mt-4 flex flex-col gap-3">
@@ -116,6 +116,20 @@
               </div>
             {:else}
               <p class="text-sm text-[#010313]/50">No country data yet.</p>
+            {/each}
+          </div>
+        </div>
+
+        <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-5">
+          <h2 class="text-lg font-bold">Referrers</h2>
+          <div class="mt-4 flex flex-col gap-3">
+            {#each data.summary.byReferrer as item}
+              <div class="flex items-center justify-between gap-3 border-b border-[#c5c7ca]/70 pb-2">
+                <span class="truncate">{item.referrer}</span>
+                <strong>{item.count}</strong>
+              </div>
+            {:else}
+              <p class="text-sm text-[#010313]/50">No referrer data yet.</p>
             {/each}
           </div>
         </div>

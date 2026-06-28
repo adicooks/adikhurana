@@ -29,6 +29,7 @@ export type ResumeAnalyticsSummary = {
   averageDurationSeconds: number;
   byCountry: Array<{ country: string; count: number }>;
   byCity: Array<{ city: string; region: string; country: string; count: number }>;
+  byReferrer: Array<{ referrer: string; count: number }>;
   durationBuckets: Array<{ bucket: string; count: number }>;
   recentEvents: ResumeAnalyticsEvent[];
 };
@@ -171,6 +172,17 @@ function topEntries(map: Map<string, number>, limit = 10) {
     .slice(0, limit);
 }
 
+function normalizeReferrer(referrer: string | null) {
+  if (!referrer) return "direct";
+
+  try {
+    const url = new URL(referrer);
+    return url.hostname.replace(/^www\./, "") || referrer;
+  } catch {
+    return referrer;
+  }
+}
+
 export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummary> {
   await ensureTable();
   const sql = getSql();
@@ -202,6 +214,7 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
   const resumeViewers = new Set<string>();
   const byCountry = new Map<string, number>();
   const byCity = new Map<string, number>();
+  const byReferrer = new Map<string, number>();
   const durationBuckets = new Map<string, number>();
   let durationTotal = 0;
   let durationCount = 0;
@@ -216,6 +229,10 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
     }
 
     if (event.country) increment(byCountry, event.country);
+
+    if (event.event_name === "resume_view") {
+      increment(byReferrer, normalizeReferrer(event.referrer));
+    }
 
     if (event.city || event.region || event.country) {
       increment(
@@ -245,6 +262,7 @@ export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummar
       const [city, region, country] = key.split("|");
       return { city, region, country, count };
     }),
+    byReferrer: topEntries(byReferrer).map(({ key, count }) => ({ referrer: key, count })),
     durationBuckets: topEntries(durationBuckets).map(({ key, count }) => ({ bucket: key, count })),
     recentEvents: rows
   };
