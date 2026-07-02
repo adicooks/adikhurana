@@ -68,6 +68,7 @@
   }
 
   let currentTime: string = "";
+  let lastVisitLocation = "unknown";
   let audio: HTMLAudioElement | null = null;
   let isPlaying = false;
 
@@ -87,6 +88,18 @@
   onMount(() => {
     updateTime();
     setInterval(updateTime, 1000);
+
+    fetch("/api/visit-location")
+      .then((response) => response.json())
+      .then(({ city, region, country }) => {
+        const locationParts = [city, region, country].filter(
+          (part) => part && part !== "unknown"
+        );
+        lastVisitLocation = locationParts.join(", ") || "unknown";
+      })
+      .catch(() => {
+        lastVisitLocation = "unknown";
+      });
 
     // Prepare audio but DO NOT play it.
     audio = new Audio("/wii.background.mp3");
@@ -234,25 +247,31 @@
     </p>
 
     <div class="flex">
-      <div class="w-full overflow-hidden bg-[#DBDCDD] h-[50px] sm:h-[70px]" />
+      <div class="w-full overflow-hidden bg-[#DBDCDD] h-[58px] sm:h-[70px]" />
       <img
-        class="w-[122px] h-[50px] sm:w-[170px] sm:h-[70px] -scale-x-100"
+        class="w-[122px] h-[58px] sm:w-[170px] sm:h-[70px] -scale-x-100"
         src={NotchEdge}
         alt="Notch Edge"
       />
-      <div class="sm:w-[100rem] flex flex-col items-center justify-center h-[50px] sm:h-[70px] -translate-y-1">
+      <div class="sm:w-[100rem] flex flex-col items-center justify-center h-[58px] sm:h-[70px] -translate-y-1">
         <p
           class="text-xl sm:text-2xl font-medium text-center whitespace-nowrap text-[#010313]/50 w-full"
         >
           {currentTime.toLowerCase()}
         </p>
+        <p
+          class="mt-0.5 flex items-center justify-center gap-1.5 px-2 text-xs leading-tight font-medium text-center text-[#010313]/30 sm:text-sm"
+        >
+          <span class="h-2 w-2 rounded-full bg-green-500" aria-hidden="true"></span>
+          <span>last visit -- {lastVisitLocation.toLowerCase()}</span>
+        </p>
       </div>
       <img
-        class="w-[122px] h-[50px] sm:h-[70px] sm:w-[170px]"
+        class="w-[122px] h-[58px] sm:h-[70px] sm:w-[170px]"
         src={NotchEdge}
         alt="Notch Edge"
       />
-      <div class="w-full bg-[#DBDCDD] h-[50px] sm:h-[70px]" />
+      <div class="w-full bg-[#DBDCDD] h-[58px] sm:h-[70px]" />
     </div>
 
     <div class="w-full bg-[#DBDCDD] h-[40px] sm:min-h-[70px]" />
