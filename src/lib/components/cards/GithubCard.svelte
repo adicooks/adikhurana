@@ -15,6 +15,7 @@
         width="30"
         height="30"
         alt="GitHub Logo"
+        decoding="async"
       />
       <span
         class="translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold"
@@ -30,6 +31,9 @@
           class="absolute top-5 left-20 w-[256px] h-[158px] group-hover:-translate-y-2 transition-transform opacity-60"
           src={photo}
           alt="Background"
+          width="256"
+          height="158"
+          decoding="async"
         />
       {/if}
     </div>

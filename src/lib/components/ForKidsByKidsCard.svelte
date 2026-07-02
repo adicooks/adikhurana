@@ -52,6 +52,9 @@ We are now scaling this initiative by cultivating camp alumni as peer leaders an
         class="absolute -top-8 -right-10 group-hover:-translate-y-2 transition-transform scale-[1.75] z-0"
         src={photo}
         alt="Background"
+        width="640"
+        height="427"
+        decoding="async"
       />
     {/if}
   </div>
@@ -68,11 +71,11 @@ We are now scaling this initiative by cultivating camp alumni as peer leaders an
         </div>
         <div class="modal-5050-right">
           <div class="modal-photo-list">
-            <img src="/pictures/teaching1.jpg" alt="teaching1" class="modal-photo" />
-            <img src="/pictures/teaching2.jpg" alt="teaching2" class="modal-photo" />
-            <img src="/pictures/teaching3.jpg" alt="teaching3" class= "modal-photo" />
-            <img src="/pictures/teaching4.jpg" alt="teaching4" class="modal-photo" />
-            <img src="/pictures/teaching5.jpg" alt="teaching5" class="modal-photo" />
+            <img src="/pictures/teaching1.jpg" alt="teaching1" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/teaching2.jpg" alt="teaching2" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/teaching3.jpg" alt="teaching3" class= "modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/teaching4.jpg" alt="teaching4" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/teaching5.jpg" alt="teaching5" class="modal-photo" loading="lazy" decoding="async" />
           </div>
         </div>
       </div>

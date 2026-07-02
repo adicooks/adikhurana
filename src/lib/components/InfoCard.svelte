@@ -38,6 +38,10 @@ I’m driven to build innovative technologies that bridge entrepreneurship, rese
       class="absolute inset-0 w-full h-full object-cover opacity-100 group-hover:scale-105 transition-transform duration-300 z-0"
       src={photo}
       alt="Background"
+      width="640"
+      height="427"
+      decoding="async"
+      fetchpriority="high"
     />
   {/if}
 </Card>
@@ -58,16 +62,16 @@ I’m driven to build innovative technologies that bridge entrepreneurship, rese
         </div>
         <div class="modal-5050-right">
           <div class="modal-photo-list">
-            <img src="/pictures/adi_pic.jpg" alt="adi_pic" class="modal-photo" />
-            <img src="/pictures/teaching5.jpg" alt="Adi Governor" class="modal-photo" />
-            <img src="/pictures/iccr.jpg" alt="iccr" class="modal-photo" />
-            <img src="/pictures/hindi_piano.JPG" alt="IMG_6744" class="modal-photo" />
-            <img src="/pictures/award.jpg" alt="Wagah" class="modal-photo" />
-            <img src="/pictures/carnegie.jpg" alt="0D5A7413" class="modal-photo" />
-            <img src="/pictures/columbia.jpg" alt="0D5A7417" class="modal-photo" />
-            <img src="/pictures/hindi2.JPG" alt="0D5A7451" class="modal-photo" />
-            <img src="/pictures/jshs_award.jpg" alt="0D5A8816" class="modal-photo" />
-            <img src="/pictures/happy.JPG" alt="0D5A8832" class="modal-photo" />
+            <img src="/pictures/adi_pic.jpg" alt="adi_pic" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/teaching5.jpg" alt="Adi Governor" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/iccr.jpg" alt="iccr" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/hindi_piano.JPG" alt="IMG_6744" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/award.jpg" alt="Wagah" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/carnegie.jpg" alt="0D5A7413" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/columbia.jpg" alt="0D5A7417" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/hindi2.JPG" alt="0D5A7451" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/jshs_award.jpg" alt="0D5A8816" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/happy.JPG" alt="0D5A8832" class="modal-photo" loading="lazy" decoding="async" />
           </div>
         </div>
       </div>

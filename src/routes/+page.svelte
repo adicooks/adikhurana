@@ -20,15 +20,15 @@
 
   import Email from "$lib/assets/email.svg";
 
-  import GalaxyBG   from "$lib/assets/galaxygmails-bg.png";
+  import GalaxyBG   from "$lib/assets/cards/galaxy-card.webp";
   import HeatmapSVG from "$lib/assets/heatmap.svg";
   import LinkedBG   from "$lib/assets/linkedin-bg.jpeg";
   import PiscBG     from "$lib/assets/pisc-bg.png";
   import PennBG     from "$lib/assets/penn-bg.jpeg";
-  import TeachingBG from "$lib/assets/teaching.jpg";
-  import InfoBG     from "$lib/assets/adi_pic.jpg";
-  import Iccr       from "$lib/assets/iccr.jpg";
-  import ScienceBG  from "$lib/assets/sciencebg.jpg";
+  import TeachingBG from "$lib/assets/cards/teaching-card.webp";
+  import InfoBG     from "$lib/assets/cards/adi-card.webp";
+  import Iccr       from "$lib/assets/cards/iccr-card.webp";
+  import ScienceBG  from "$lib/assets/cards/science-card.webp";
 
   let showModal = false;
   let modalCardId: string | null = null;

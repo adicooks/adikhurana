@@ -56,6 +56,9 @@ Through my PISC internship with the Penn Community Violence Prevention Program, 
         class="absolute top-6 -right-20 group-hover:-translate-y-2 transition-transform scale-[1.05]"
         src={photo}
         alt="Background"
+        width="640"
+        height="426"
+        decoding="async"
       />
     {/if}
   </div>
@@ -77,8 +80,8 @@ Through my PISC internship with the Penn Community Violence Prevention Program, 
         </div>
 
         <div class="modal-5050-right">
-          <img src={awardLetter} alt="Award Letter" class="modal-image modal-image-lg" />
-          <img src={certification} alt="Certification" class="modal-image" />
+          <img src={awardLetter} alt="Award Letter" class="modal-image modal-image-lg" loading="lazy" decoding="async" />
+          <img src={certification} alt="Certification" class="modal-image" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>

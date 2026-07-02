@@ -20,6 +20,9 @@
       src={photo}
       alt="Background"
       class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none select-none"
+      width="640"
+      height="296"
+      decoding="async"
     />
   {/if}
 
@@ -65,14 +68,14 @@
         </div>
 
         <div class="modal-5050-right">
-            <img src="/pictures/hindi_piano.JPG" alt="adi_pic" class="modal-photo" />
-            <img src="/pictures/hindi-COLLAGE.jpg" alt="Adi Governor" class="modal-photo" />
-            <img src="/pictures/hindi-iccr.jpg" alt="iccr" class="modal-photo" />
-            <img src="/pictures/iccr.jpg" alt="IMG_6744" class="modal-photo" />
-            <img src="/pictures/wagah.jpg" alt="Wagah" class="modal-photo" />
-            <img src="/pictures/hindi2.JPG" alt="0D5A7413" class="modal-photo" />
-            <img src="/pictures/happy.JPG" alt="0D5A7417" class="modal-photo" />
-            <img src="/pictures/Adi-Governor-AnandiBen.jpeg" alt="0D5A7451" class="modal-photo" />
+            <img src="/pictures/hindi_piano.JPG" alt="adi_pic" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/hindi-COLLAGE.jpg" alt="Adi Governor" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/hindi-iccr.jpg" alt="iccr" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/iccr.jpg" alt="IMG_6744" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/wagah.jpg" alt="Wagah" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/hindi2.JPG" alt="0D5A7413" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/happy.JPG" alt="0D5A7417" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/Adi-Governor-AnandiBen.jpeg" alt="0D5A7451" class="modal-photo" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>

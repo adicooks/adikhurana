@@ -23,6 +23,9 @@ After SeniorConnect, I developed AlertNow, a patent-pending, low-cost, real-time
       alt="Background"
       class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none select-none"
       style="object-position: center 30%;"
+      width="640"
+      height="854"
+      decoding="async"
     />
   {/if}
 
@@ -68,12 +71,12 @@ After SeniorConnect, I developed AlertNow, a patent-pending, low-cost, real-time
         </div>
 
         <div class="modal-5050-right">
-            <img src="/pictures/Adi Coriell seniorconnect.png" alt="adi_pic" class="modal-photo" />
-            <img src="/pictures/Adi-dvsf-2025-pic.jpg" alt="iccr" class="modal-photo" />
-            <img src="/pictures/award.jpg" alt="IMG_6744" class="modal-photo" />
-            <img src="/pictures/dvsf.jpg" alt="Wagah" class="modal-photo" />
-            <img src="/pictures/jshs.jpg" alt="0D5A7413" class="modal-photo" />
-            <img src="/pictures/jshs_award.jpg" alt="0D5A7417" class="modal-photo" />
+            <img src="/pictures/Adi Coriell seniorconnect.png" alt="adi_pic" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/Adi-dvsf-2025-pic.jpg" alt="iccr" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/award.jpg" alt="IMG_6744" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/dvsf.jpg" alt="Wagah" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/jshs.jpg" alt="0D5A7413" class="modal-photo" loading="lazy" decoding="async" />
+            <img src="/pictures/jshs_award.jpg" alt="0D5A7417" class="modal-photo" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>

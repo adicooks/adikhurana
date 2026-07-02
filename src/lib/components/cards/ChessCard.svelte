@@ -56,6 +56,9 @@
         class="absolute z-8 -top-3 left-20 group-hover:-translate-y-2 transition-transform opacity-80"
         src={photo}
         alt=""
+        width="320"
+        height="320"
+        decoding="async"
       />
     {/if}
   </div>

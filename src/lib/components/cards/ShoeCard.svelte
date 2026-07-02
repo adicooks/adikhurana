@@ -15,6 +15,9 @@
   class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none select-none transform translate-x-[40px]"
   src={JordanBackground}
   alt="Sneaker background"
+  width="640"
+  height="426"
+  decoding="async"
     />
 
     <!-- dark gradient overlay -->

@@ -36,6 +36,9 @@
         class="absolute -bottom-12 -right-16 group-hover:-translate-y-2 transition-transform"
         src={photo}
         alt="Background"
+        width="640"
+        height="426"
+        decoding="async"
       />
     {/if}
   </div>
@@ -59,8 +62,8 @@
 
         <!-- right: images (scrollable) -->
         <div class="modal-5050-right">
-          <img src={awardLetter} alt="Award Letter" class="modal-image modal-image-lg" />
-          <img src={certification} alt="Certification" class="modal-image" />
+          <img src={awardLetter} alt="Award Letter" class="modal-image modal-image-lg" loading="lazy" decoding="async" />
+          <img src={certification} alt="Certification" class="modal-image" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>

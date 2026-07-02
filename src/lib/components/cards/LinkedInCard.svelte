@@ -15,6 +15,7 @@
         width="30"
         height="30"
         alt="LinkedIn Profile"
+        decoding="async"
       />
       <span
         class="translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold text-white-800 z-10"
@@ -30,6 +31,9 @@
           class="absolute top-1 -right-16 group-hover:-translate-y-2 transition-transform"
           src={photo}
           alt=""
+          width="640"
+          height="426"
+          decoding="async"
         />
       {/if}
     </div>
