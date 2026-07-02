@@ -50,7 +50,8 @@ async function getAccessToken() {
   });
 
   if (!response.ok) {
-    throw new Error("spotify_auth_failed");
+    const errorText = await response.text();
+    throw new Error(`spotify_auth_failed_${response.status}_${errorText}`);
   }
 
   const token = await response.json();
