@@ -8,6 +8,7 @@
   import LinkedInCard from "$lib/components/cards/LinkedInCard.svelte";
   import InjuryCard from "$lib/components/cards/InjuryCard.svelte";
   import GithubCard from "$lib/components/cards/GithubCard.svelte";
+  import SpotifyCard from "$lib/components/cards/SpotifyCard.svelte";
   import ChessCard from "$lib/components/cards/ChessCard.svelte";
   import NiChartCard from "$lib/components/cards/NiChartCard.svelte";
   import GalaxyCard from "$lib/components/cards/GalaxyCard.svelte";
@@ -198,6 +199,8 @@
         text={cardContent.linkedin.text}
         photo={cardContent.linkedin.photo}
       />
+
+      <SpotifyCard />
 
       <Modal
         show={showModal}

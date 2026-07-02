@@ -11,6 +11,18 @@ Required Vercel environment variables:
   `resume_analytics_events` table automatically.
 - `RESUME_STATS_PASSWORD`: Password for the private `/resume-stats` dashboard.
 
+## Spotify card
+
+The homepage Spotify card calls `/api/spotify-last-played`, which uses the
+Spotify Web API recently played endpoint.
+
+Required Vercel environment variables:
+
+- `SPOTIFY_CLIENT_ID`: Spotify app client ID.
+- `SPOTIFY_CLIENT_SECRET`: Spotify app client secret.
+- `SPOTIFY_REFRESH_TOKEN`: Refresh token created with the
+  `user-read-recently-played` scope.
+
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
 ## Creating a project
