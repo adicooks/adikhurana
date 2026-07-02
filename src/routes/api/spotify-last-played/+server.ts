@@ -1,5 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { json, type RequestHandler } from "@sveltejs/kit";
+import { Buffer } from "node:buffer";
 
 type SpotifyImage = {
   url?: string;
@@ -42,7 +43,7 @@ async function getAccessToken() {
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
-      Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+      Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     body
@@ -107,7 +108,12 @@ export const GET: RequestHandler = async () => {
         }
       }
     );
-  } catch {
+  } catch (error) {
+    console.error(
+      "spotify-last-played failed",
+      error instanceof Error ? error.message : "unknown_error"
+    );
+
     return json({
       configured: true,
       connected: false,
