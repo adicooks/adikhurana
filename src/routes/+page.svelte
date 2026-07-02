@@ -200,7 +200,6 @@
       <EmptyCard />
       <EmptyCard soft={true} />
       <EmptyCard soft={true} />
-      <EmptyCard soft={true} />
     </div>
   </div>
 
