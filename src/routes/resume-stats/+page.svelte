@@ -83,7 +83,7 @@
         </p>
       </section>
     {:else if data.summary}
-      <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+      <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
           <p class="text-sm font-bold text-[#010313]/45">views</p>
           <p class="mt-2 text-3xl font-bold">{data.summary.totalViews}</p>
@@ -97,16 +97,8 @@
           <p class="mt-2 text-3xl font-bold">{data.summary.totalClicks}</p>
         </div>
         <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
-          <p class="text-sm font-bold text-[#010313]/45">sessions</p>
-          <p class="mt-2 text-3xl font-bold">{data.summary.uniqueSessions}</p>
-        </div>
-        <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
           <p class="text-sm font-bold text-[#010313]/45">avg stay</p>
           <p class="mt-2 text-3xl font-bold">{formatDuration(data.summary.averageDurationSeconds)}</p>
-        </div>
-        <div class="rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] p-4">
-          <p class="text-sm font-bold text-[#010313]/45">events</p>
-          <p class="mt-2 text-3xl font-bold">{data.summary.totalEvents}</p>
         </div>
       </section>
 
