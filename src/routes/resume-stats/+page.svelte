@@ -3,6 +3,17 @@
 
   export let data: PageData;
 
+  type ResumeStatsEvent = NonNullable<PageData["summary"]>["recentEvents"][number];
+
+  let selectedEvent: ResumeStatsEvent | null = null;
+
+  $: selectedSessionEvents =
+    selectedEvent && data.summary
+      ? data.summary.recentEvents
+          .filter((event) => sessionKey(event) === sessionKey(selectedEvent as ResumeStatsEvent))
+          .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      : [];
+
   function formatDate(value: string) {
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
@@ -24,6 +35,28 @@
   function shortSessionId(sessionId: string) {
     if (sessionId.startsWith("event-")) return "unknown session";
     return sessionId.slice(0, 8);
+  }
+
+  function sessionKey(event: ResumeStatsEvent) {
+    return event.session_id || `event-${event.id}`;
+  }
+
+  function formatLocation(event: ResumeStatsEvent) {
+    return `${event.city || "unknown"}, ${event.region || "unknown"}, ${event.country || "unknown"}`;
+  }
+
+  function openSession(event: ResumeStatsEvent) {
+    selectedEvent = event;
+  }
+
+  function handleRowKeydown(event: KeyboardEvent, resumeEvent: ResumeStatsEvent) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openSession(resumeEvent);
+  }
+
+  function closeFromBackdrop(event: MouseEvent) {
+    if (event.target === event.currentTarget) selectedEvent = null;
   }
 </script>
 
@@ -165,7 +198,7 @@
           <h2 class="text-lg font-bold">Session timeline</h2>
         </div>
         <div class="grid gap-0 md:grid-cols-2">
-          {#each data.summary.sessionTimelines as session}
+          {#each data.summary.sessionTimelines.slice(0, 4) as session}
             <article class="border-b border-[#c5c7ca]/70 p-5 md:border-r">
               <div class="flex items-start justify-between gap-4">
                 <div>
@@ -235,19 +268,27 @@
             </thead>
             <tbody>
               {#each data.summary.recentEvents as event}
-                <tr class="border-t border-[#c5c7ca]/70">
+                <tr
+                  class="cursor-pointer border-t border-[#c5c7ca]/70 transition hover:bg-white"
+                  role="button"
+                  tabindex="0"
+                  on:click={() => openSession(event)}
+                  on:keydown={(keyboardEvent) => handleRowKeydown(keyboardEvent, event)}
+                >
                   <td class="px-4 py-3">{formatDate(event.created_at)}</td>
                   <td class="px-4 py-3 font-bold">{event.event_name}</td>
                   <td class="px-4 py-3">{formatDuration(event.duration_seconds)}</td>
-                  <td class="px-4 py-3">
-                    {event.city || "unknown"}, {event.region || "unknown"}, {event.country || "unknown"}
-                  </td>
+                  <td class="px-4 py-3">{formatLocation(event)}</td>
                   <td class="px-4 py-3">{event.source || "-"}</td>
                   <td class="max-w-[280px] truncate px-4 py-3">{event.referrer || "-"}</td>
                   <td class="px-4 py-3">
                     <form method="POST" action="?/deleteEvent">
                       <input type="hidden" name="eventId" value={event.id} />
-                      <button class="font-bold text-red-700 transition hover:text-red-500" type="submit">
+                      <button
+                        class="font-bold text-red-700 transition hover:text-red-500"
+                        type="submit"
+                        on:click|stopPropagation
+                      >
                         delete
                       </button>
                     </form>
@@ -264,4 +305,56 @@
       </section>
     {/if}
   </div>
+
+  {#if selectedEvent}
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-[#010313]/50 px-4 py-8"
+      role="presentation"
+      on:click={closeFromBackdrop}
+    >
+      <section
+        class="max-h-full w-full max-w-2xl overflow-y-auto rounded-lg border border-[#c5c7ca] bg-[#f7f7f7] shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="selected-session-title"
+      >
+        <div class="flex items-start justify-between gap-4 border-b border-[#c5c7ca] p-5">
+          <div>
+            <p class="text-sm font-bold text-[#010313]/45">{shortSessionId(sessionKey(selectedEvent))}</p>
+            <h2 id="selected-session-title" class="mt-1 text-xl font-bold">Session timeline</h2>
+            <p class="mt-2 text-sm text-[#010313]/55">{formatLocation(selectedEvent)}</p>
+          </div>
+          <button
+            class="rounded-full bg-[#010313] px-3 py-1 text-sm font-bold text-white transition hover:bg-blue-500"
+            type="button"
+            on:click={() => (selectedEvent = null)}
+          >
+            close
+          </button>
+        </div>
+
+        <div class="p-5">
+          <ol class="flex flex-col gap-4">
+            {#each selectedSessionEvents as event}
+              <li class="flex items-start justify-between gap-4 border-l-2 border-[#010313]/20 pl-4">
+                <div>
+                  <p class="font-bold">{event.event_name}</p>
+                  <p class="mt-1 text-sm text-[#010313]/55">{formatDate(event.created_at)}</p>
+                  {#if event.source}
+                    <p class="mt-1 text-xs text-[#010313]/45">{event.source}</p>
+                  {/if}
+                  {#if event.referrer}
+                    <p class="mt-1 max-w-md truncate text-xs text-[#010313]/45">from {event.referrer}</p>
+                  {/if}
+                </div>
+                <p class="shrink-0 text-sm font-bold text-[#010313]">{formatDuration(event.duration_seconds)}</p>
+              </li>
+            {:else}
+              <li class="text-sm text-[#010313]/50">No events found for this session.</li>
+            {/each}
+          </ol>
+        </div>
+      </section>
+    </div>
+  {/if}
 </main>
