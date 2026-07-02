@@ -263,7 +263,7 @@
           class="mt-0.5 flex items-center justify-center gap-1.5 px-2 text-xs leading-tight font-medium text-center text-[#010313]/30 sm:text-sm"
         >
           <span class="h-2 w-2 rounded-full bg-green-500" aria-hidden="true"></span>
-          <span>last visit -- {lastVisitLocation.toLowerCase()}</span>
+          <span>last visit — {lastVisitLocation.toLowerCase()}</span>
         </p>
       </div>
       <img
