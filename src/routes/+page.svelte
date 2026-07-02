@@ -227,7 +227,7 @@
     </a>
 
     <p
-      class="absolute left-0 right-0 sm:bottom-4 text-sm font-medium text-center whitespace-nowrap text-[#010313]/30"
+      class="relative z-10 mb-1 px-16 text-xs leading-tight font-medium text-center text-[#010313]/30 sm:absolute sm:left-0 sm:right-0 sm:bottom-4 sm:mb-0 sm:px-0 sm:text-sm"
     >
       inspired by the wii menu
       <br />
