@@ -294,6 +294,28 @@ function buildSessionTimelines(rows: ResumeAnalyticsEvent[]) {
     .slice(0, 12);
 }
 
+export async function getResumeReachStats(): Promise<{ views: number; countries: number }> {
+  await ensureTable();
+  const sql = getSql();
+  if (!sql) {
+    throw new Error("Resume analytics database is not configured.");
+  }
+
+  const rows = (await sql`
+    SELECT
+      COUNT(*) FILTER (WHERE event_name = 'resume_view')::int AS views,
+      COUNT(DISTINCT country) FILTER (
+        WHERE event_name = 'resume_view' AND country IS NOT NULL
+      )::int AS countries
+    FROM resume_analytics_events
+  `) as Array<{ views: number; countries: number }>;
+
+  return {
+    views: rows[0]?.views ?? 0,
+    countries: rows[0]?.countries ?? 0
+  };
+}
+
 export async function getResumeAnalyticsSummary(): Promise<ResumeAnalyticsSummary> {
   await ensureTable();
   const sql = getSql();
