@@ -28,7 +28,7 @@
 
   onMount(() => {
     loadSpotifyTrack();
-    refreshTimer = setInterval(loadSpotifyTrack, 15000);
+    refreshTimer = setInterval(loadSpotifyTrack, 5000);
 
     return () => clearInterval(refreshTimer);
   });
