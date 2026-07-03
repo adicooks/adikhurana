@@ -44,6 +44,10 @@
     science:      { text: "exploring ideas thru science",   photo: ScienceBG },
   };
 
+  const visibleCardCount = 11;
+  const emptyCardCount =
+    visibleCardCount % 3 === 0 ? 3 : 3 - (visibleCardCount % 3);
+
   function openEditModal(cardId: string) {
     modalCardId = cardId;
     modalText = cardContent[cardId]?.text || "";
@@ -194,9 +198,9 @@
         onSave={saveEditModal}
       />
 
-      <EmptyCard />
-      <EmptyCard soft={true} />
-      <EmptyCard soft={true} />
+      {#each Array(emptyCardCount) as _, index}
+        <EmptyCard soft={index > 0} />
+      {/each}
     </div>
   </div>
 
