@@ -13,6 +13,7 @@
   import NiChartCard from "$lib/components/cards/NiChartCard.svelte";
   import GalaxyCard from "$lib/components/cards/GalaxyCard.svelte";
   import ResumeCard from "$lib/components/cards/ResumeCard.svelte";
+  import WithCoverageCard from "$lib/components/cards/WithCoverageCard.svelte";
   import InfoCard from "$lib/components/InfoCard.svelte";
   import ScienceCard from "$lib/components/cards/ScienceCard.svelte";
   import Modal from "$lib/components/Modal.svelte";
@@ -179,6 +180,8 @@
         photo={cardContent.linkedin.photo}
       />
 
+      <WithCoverageCard />
+
       <SpotifyCard />
 
       <Modal
@@ -191,7 +194,6 @@
         onSave={saveEditModal}
       />
 
-      <EmptyCard />
       <EmptyCard />
       <EmptyCard soft={true} />
       <EmptyCard soft={true} />
