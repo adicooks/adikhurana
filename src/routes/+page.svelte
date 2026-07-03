@@ -200,9 +200,17 @@
 
   <div class="w-full flex flex-col sm:mb-0 relative fade-in-bottom">
     <button
-      class="z-10 absolute transition-all shadow-md hover:shadow-lg rounded-full flex items-center justify-center ring-1 hover:ring-4 ring-[#C5C7CA] hover:ring-blue-400 bg-[#EEEEEE] w-10 h-10 sm:h-20 sm:w-20 top-9 left-2.5 sm:top-6 sm:left-6"
+      type="button"
+      aria-label="Play Wii music"
+      title="Play Wii music"
+      class="group z-10 absolute transition-all shadow-md hover:shadow-lg rounded-full flex items-center justify-center ring-1 hover:ring-4 ring-[#C5C7CA] hover:ring-blue-400 bg-[#EEEEEE] w-10 h-10 sm:h-20 sm:w-20 top-9 left-2.5 sm:top-6 sm:left-6"
       on:click={playMusic}
     >
+      <span
+        class="pointer-events-none absolute left-0 top-full mt-2 whitespace-nowrap rounded-full bg-[#010313]/85 px-2.5 py-1 text-xs font-semibold text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 sm:left-1/2 sm:-translate-x-1/2"
+      >
+        play wii music
+      </span>
       <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <path
@@ -215,8 +223,15 @@
 
     <a
       href="mailto:theadikhurana@gmail.com"
-      class="z-10 absolute transition-all shadow-md hover:shadow-lg rounded-full flex ring-1 hover:ring-4 ring-[#C5C7CA] hover:ring-blue-400 bg-[#EEEEEE] w-10 h-10 sm:h-20 sm:w-20 top-9 right-2.5 sm:top-6 sm:right-6"
+      aria-label="Contact me"
+      title="Contact me"
+      class="group z-10 absolute transition-all shadow-md hover:shadow-lg rounded-full flex ring-1 hover:ring-4 ring-[#C5C7CA] hover:ring-blue-400 bg-[#EEEEEE] w-10 h-10 sm:h-20 sm:w-20 top-9 right-2.5 sm:top-6 sm:right-6"
     >
+      <span
+        class="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap rounded-full bg-[#010313]/85 px-2.5 py-1 text-xs font-semibold text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 sm:right-auto sm:left-1/2 sm:-translate-x-1/2"
+      >
+        contact me
+      </span>
       <img class="m-auto" src={Email} alt="Email" />
     </a>
 
