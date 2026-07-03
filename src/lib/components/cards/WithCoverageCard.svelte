@@ -45,7 +45,7 @@
 
       <div class="relative z-10 flex flex-col items-start">
         <span class="translate-y-6 text-xl font-semibold transition-transform group-hover:translate-y-0">
-          adi.wc
+          swe.wc
         </span>
         <p
           class="translate-y-6 text-sm font-medium leading-5 text-white/75 opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100"
