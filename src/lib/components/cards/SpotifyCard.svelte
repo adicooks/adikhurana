@@ -6,10 +6,13 @@
   let connected = false;
   let configured = true;
   let track = null;
+  let refreshTimer;
 
-  onMount(async () => {
+  async function loadSpotifyTrack() {
     try {
-      const response = await fetch("/api/spotify-last-played");
+      const response = await fetch(`/api/spotify-last-played?t=${Date.now()}`, {
+        cache: "no-store"
+      });
       const data = await response.json();
 
       configured = data.configured !== false;
@@ -21,29 +24,35 @@
     } finally {
       loading = false;
     }
+  }
+
+  onMount(() => {
+    loadSpotifyTrack();
+    refreshTimer = setInterval(loadSpotifyTrack, 15000);
+
+    return () => clearInterval(refreshTimer);
   });
 
   $: cardHref = track?.url || "https://open.spotify.com/";
-  $: title = loading
-    ? "loading track..."
-    : !configured
-      ? "connect spotify"
-      : track?.name || "spotify quiet";
-  $: subtitle = loading
-    ? "last played song"
+  $: status = loading
+    ? "loading..."
     : !configured
       ? "add env vars"
-      : connected && track?.artists
-        ? track.artists
-        : "last played song";
+      : track?.source === "current"
+        ? "current song"
+        : track?.source === "recent"
+          ? "last song"
+          : "spotify quiet";
+  $: trackName = track?.name || "nothing playing";
+  $: artistName = track?.artists || "open spotify";
 </script>
 
 <a href={cardHref} target="_blank" rel="noopener noreferrer">
-  <Card additionalClasses="hover:scale-100 bg-[#111111] cursor-pointer">
-    <div class="relative flex h-full w-full items-end overflow-hidden px-[22px] py-4 text-white">
+  <Card additionalClasses="hover:scale-100 bg-[#050505] cursor-pointer">
+    <div class="relative flex h-full w-full flex-col justify-between overflow-hidden px-[22px] py-4 text-white">
       {#if track?.image}
         <img
-          class="absolute right-3 top-3 h-20 w-20 rounded-xl object-cover opacity-90 shadow-lg transition-transform group-hover:-translate-y-1"
+          class="absolute -right-4 -top-5 h-28 w-28 rotate-6 rounded-2xl object-cover opacity-80 shadow-2xl transition-transform group-hover:-translate-y-1 group-hover:rotate-3"
           src={track.image}
           alt=""
           width="160"
@@ -52,20 +61,36 @@
         />
       {:else}
         <div
-          class="absolute right-4 top-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#1DB954]/20 ring-1 ring-[#1DB954]/40"
+          class="absolute -right-4 -top-5 h-28 w-28 rotate-6 rounded-2xl bg-[#101010] ring-1 ring-white/10"
           aria-hidden="true"
-        >
-          <span class="h-7 w-7 rounded-full bg-[#1DB954]"></span>
-        </div>
+        />
       {/if}
 
-      <div class="relative z-10 flex min-w-0 flex-col items-start">
-        <div class="mb-2 flex items-center gap-2">
-          <span class="h-3 w-3 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
-          <span class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1DB954]">spotify</span>
+      <div class="relative z-10 flex items-start justify-between">
+        <svg
+          class="h-8 w-8 text-[#1DB954]"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-label="Spotify"
+        >
+          <path
+            d="M12 0C5.38 0 0 5.38 0 12s5.38 12 12 12 12-5.38 12-12S18.66 0 12 0Zm5.51 17.31a.75.75 0 0 1-1.03.25c-2.83-1.73-6.39-2.12-10.58-1.16a.75.75 0 0 1-.33-1.46c4.59-1.05 8.53-.6 11.69 1.34.35.21.46.68.25 1.03Zm1.47-3.27a.94.94 0 0 1-1.29.31c-3.24-1.99-8.18-2.57-12.01-1.4a.94.94 0 1 1-.55-1.8c4.38-1.33 9.82-.69 13.54 1.59.44.27.58.85.31 1.3Zm.13-3.4C15.22 8.33 8.82 8.12 5.1 9.25a1.13 1.13 0 0 1-.66-2.16c4.27-1.3 11.34-1.05 15.82 1.61a1.13 1.13 0 0 1-1.15 1.94Z"
+          />
+        </svg>
+
+        <div class="min-w-0 flex flex-col items-end text-right">
+          <span class="text-xl font-semibold leading-6 transition-opacity group-hover:opacity-0">
+            adi.spotify
+          </span>
+          <span class="absolute right-[22px] top-4 text-xl font-semibold leading-6 opacity-0 transition-opacity group-hover:opacity-100">
+            {status}
+          </span>
         </div>
-        <span class="max-w-[13rem] truncate text-xl font-semibold leading-6">{title}</span>
-        <p class="mt-1 max-w-[12rem] truncate text-sm font-medium text-white/65">{subtitle}</p>
+      </div>
+
+      <div class="relative z-10 min-w-0">
+        <p class="max-w-[13rem] truncate text-lg font-semibold leading-5">{trackName}</p>
+        <p class="mt-1 max-w-[13rem] truncate text-sm font-medium text-white/55">{artistName}</p>
       </div>
     </div>
   </Card>

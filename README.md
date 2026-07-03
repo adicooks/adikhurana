@@ -13,15 +13,16 @@ Required Vercel environment variables:
 
 ## Spotify card
 
-The homepage Spotify card calls `/api/spotify-last-played`, which uses the
-Spotify Web API recently played endpoint.
+The homepage Spotify card calls `/api/spotify-last-played`, which checks the
+Spotify Web API currently playing endpoint first, then falls back to recently
+played if nothing is active.
 
 Required Vercel environment variables:
 
 - `SPOTIFY_CLIENT_ID`: Spotify app client ID.
 - `SPOTIFY_CLIENT_SECRET`: Spotify app client secret.
 - `SPOTIFY_REFRESH_TOKEN`: Refresh token created with the
-  `user-read-recently-played` scope.
+  `user-read-currently-playing user-read-recently-played` scopes.
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 

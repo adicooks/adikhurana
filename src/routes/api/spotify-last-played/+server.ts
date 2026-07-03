@@ -7,6 +7,7 @@ type SpotifyImage = {
 };
 
 type SpotifyTrack = {
+  type?: string;
   name?: string;
   artists?: Array<{ name?: string }>;
   album?: {
@@ -23,6 +24,15 @@ type RecentlyPlayedItem = {
   track?: SpotifyTrack;
 };
 
+type CurrentlyPlayingItem = {
+  is_playing?: boolean;
+  item?: SpotifyTrack | null;
+  progress_ms?: number | null;
+  timestamp?: number;
+};
+
+const SPOTIFY_CURRENTLY_PLAYING_URL =
+  "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track";
 const SPOTIFY_RECENTLY_PLAYED_URL =
   "https://api.spotify.com/v1/me/player/recently-played?limit=1";
 
@@ -58,6 +68,73 @@ async function getAccessToken() {
   return typeof token.access_token === "string" ? token.access_token : null;
 }
 
+function serializeTrack(
+  track: SpotifyTrack | null | undefined,
+  source: "current" | "recent",
+  playedAt = "",
+  progressMs: number | null = null
+) {
+  if (!track || track.type === "episode") {
+    return null;
+  }
+
+  return {
+    source,
+    name: track.name || "unknown track",
+    artists:
+      track.artists
+        ?.map((artist) => artist.name)
+        .filter(Boolean)
+        .join(", ") || "unknown artist",
+    album: track.album?.name || "",
+    image: track.album?.images?.[0]?.url || "",
+    url: track.external_urls?.spotify || "",
+    playedAt,
+    progressMs
+  };
+}
+
+async function getCurrentlyPlaying(accessToken: string) {
+  const response = await fetch(SPOTIFY_CURRENTLY_PLAYING_URL, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  if (response.status === 204 || response.status === 403) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`spotify_currently_playing_failed_${response.status}`);
+  }
+
+  const data = (await response.json()) as CurrentlyPlayingItem;
+
+  if (!data.is_playing) {
+    return null;
+  }
+
+  return serializeTrack(data.item, "current", "", data.progress_ms ?? null);
+}
+
+async function getRecentlyPlayed(accessToken: string) {
+  const response = await fetch(SPOTIFY_RECENTLY_PLAYED_URL, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`spotify_recently_played_failed_${response.status}`);
+  }
+
+  const data = await response.json();
+  const item = data.items?.[0] as RecentlyPlayedItem | undefined;
+
+  return serializeTrack(item?.track, "recent", item?.played_at || "");
+}
+
 export const GET: RequestHandler = async () => {
   try {
     const accessToken = await getAccessToken();
@@ -70,42 +147,19 @@ export const GET: RequestHandler = async () => {
       });
     }
 
-    const response = await fetch(SPOTIFY_RECENTLY_PLAYED_URL, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("spotify_recently_played_failed");
-    }
-
-    const data = await response.json();
-    const item = data.items?.[0] as RecentlyPlayedItem | undefined;
-    const track = item?.track;
+    const track =
+      (await getCurrentlyPlaying(accessToken)) ||
+      (await getRecentlyPlayed(accessToken));
 
     return json(
       {
         configured: true,
         connected: true,
-        track: track
-          ? {
-              name: track.name || "unknown track",
-              artists:
-                track.artists
-                  ?.map((artist) => artist.name)
-                  .filter(Boolean)
-                  .join(", ") || "unknown artist",
-              album: track.album?.name || "",
-              image: track.album?.images?.[0]?.url || "",
-              url: track.external_urls?.spotify || "",
-              playedAt: item?.played_at || ""
-            }
-          : null
+        track
       },
       {
         headers: {
-          "Cache-Control": "s-maxage=60, stale-while-revalidate=300"
+          "Cache-Control": "no-store"
         }
       }
     );
