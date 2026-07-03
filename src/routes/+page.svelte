@@ -21,7 +21,6 @@
   import Email from "$lib/assets/email.svg";
 
   import GalaxyBG   from "$lib/assets/cards/galaxy-card.webp";
-  import HeatmapSVG from "$lib/assets/heatmap.svg";
   import LinkedBG   from "$lib/assets/linkedin-bg.jpeg";
   import PiscBG     from "$lib/assets/pisc-bg.png";
   import PennBG     from "$lib/assets/penn-bg.jpeg";
@@ -36,7 +35,7 @@
   let cardContent: Record<string, { text: string; photo: string }> = {
     chess:        { text: "playing for mate",               photo: "https://images3.alphacoders.com/189/thumb-1920-189859.jpg" },
     galaxy:       { text: "bots approved here",             photo: GalaxyBG },
-    github:       { text: "pip install code",               photo: HeatmapSVG },
+    github:       { text: "pip install code",               photo: "" },
     linkedin:     { text: "my resume, but cooler",          photo: LinkedBG },
     injury:       { text: "injury trends decoded",          photo: PiscBG },
     nichart:      { text: "tackling alzheimer's with ai",   photo: PennBG },
@@ -165,7 +164,6 @@
       <GithubCard
         onEdit={() => openEditModal('github')}
         text={cardContent.github.text}
-        photo={cardContent.github.photo}
       />
 
       <InjuryCard
