@@ -4,14 +4,6 @@
   import ScienceBG from "$lib/assets/cards/science-card.webp";
 
   let showModal = false;
-  /** @type {HTMLElement | null} */
-  let origin = null;
-
-  /** @param {Event} e */
-  function open(e) {
-    origin = /** @type {HTMLElement} */ (e.currentTarget);
-    showModal = true;
-  }
 
   const paragraphs = [
     "I developed SeniorConnect, a low-cost, wearable, real-time alert system connecting seniors with cognitive disabilities to their caregivers via a custom mobile app and worked on fit from 2022–2024. The system integrates an IoT device, programmed using Python and AWS cloud services, to send instant notifications to a Swift-built iOS app on caregivers' smartphones upon activation by the senior. SeniorConnect was beta tested with seniors and caregivers. This prototype earned top awards at ISEF-affiliated and JSHS national science competitions. This paper has been published in the Journal of Emerging Investigators (JEI).",
@@ -29,9 +21,9 @@
 </script>
 
 <Card
-  additionalClasses="relative overflow-hidden bg-transparent"
+  additionalClasses="hover:scale-100 relative overflow-hidden bg-transparent"
   label="Science research details"
-  onClick={open}
+  onClick={() => (showModal = true)}
 >
   <img
     src={ScienceBG}
@@ -72,7 +64,7 @@
 </Card>
 
 {#if showModal}
-  <DetailModal title="SeniorConnect & AlertNow" {origin} on:close={() => (showModal = false)}>
+  <DetailModal title="SeniorConnect & AlertNow" on:close={() => (showModal = false)}>
     <div slot="body" class="flex flex-col gap-4 text-base leading-relaxed text-[#010313]/75">
       {#each paragraphs as paragraph}
         <p>{paragraph}</p>

@@ -26,29 +26,6 @@
   let audio: HTMLAudioElement | null = null;
   let isPlaying = false;
 
-  let gridEl: HTMLDivElement | null = null;
-  let pageCount = 1;
-  let currentPage = 0;
-
-  function updatePages() {
-    if (!gridEl) return;
-    pageCount = Math.max(1, Math.ceil(gridEl.scrollWidth / gridEl.clientWidth));
-    currentPage = Math.min(
-      pageCount - 1,
-      Math.max(0, Math.round(gridEl.scrollLeft / gridEl.clientWidth))
-    );
-  }
-
-  function scrollToPage(index: number) {
-    if (!gridEl) return;
-    const target = Math.max(0, Math.min(pageCount - 1, index));
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    gridEl.scrollTo({
-      left: target * gridEl.clientWidth,
-      behavior: reduceMotion ? "auto" : "smooth"
-    });
-  }
-
   function updateTime() {
     const now = new Date();
     const options: Intl.DateTimeFormatOptions = {
@@ -65,9 +42,6 @@
   onMount(() => {
     updateTime();
     const clockTimer = setInterval(updateTime, 1000);
-
-    updatePages();
-    window.addEventListener("resize", updatePages);
 
     fetch("/api/visit-location")
       .then((response) => response.json())
@@ -89,7 +63,6 @@
 
     return () => {
       clearInterval(clockTimer);
-      window.removeEventListener("resize", updatePages);
       audio?.pause();
     };
   });
@@ -116,36 +89,7 @@
     <div class="hidden md:block absolute top-0 bottom-0 right-0 w-14 bg-gradient-to-r from-transparent to-[#EEEEEE] z-10" />
     <div class="hidden md:block absolute top-0 bottom-0 left-0 w-14 bg-gradient-to-l from-transparent to-[#EEEEEE] z-10" />
 
-    {#if pageCount > 1}
-      <button
-        type="button"
-        aria-label="Previous page"
-        disabled={currentPage === 0}
-        class="hidden md:flex items-center justify-center absolute left-1 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-[#EEEEEE] ring-1 ring-[#C5C7CA] shadow-md transition-all hover:shadow-lg hover:ring-4 hover:ring-blue-400 disabled:opacity-0 disabled:pointer-events-none"
-        on:click={() => scrollToPage(currentPage - 1)}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M14.5 6L8.5 12L14.5 18" stroke="#808080" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-      <button
-        type="button"
-        aria-label="Next page"
-        disabled={currentPage >= pageCount - 1}
-        class="hidden md:flex items-center justify-center absolute right-1 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-[#EEEEEE] ring-1 ring-[#C5C7CA] shadow-md transition-all hover:shadow-lg hover:ring-4 hover:ring-blue-400 disabled:opacity-0 disabled:pointer-events-none"
-        on:click={() => scrollToPage(currentPage + 1)}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M9.5 6L15.5 12L9.5 18" stroke="#808080" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-    {/if}
-
-    <div
-      bind:this={gridEl}
-      on:scroll={updatePages}
-      class="grid grid-rows-3 grid-flow-col gap-4 p-2 px-4 md:p-8 md:px-14 w-full max-w-7xl mx-auto horizontal-scroll"
-    >
+    <div class="grid grid-rows-3 grid-flow-col gap-4 p-2 px-4 md:p-8 md:px-14 w-full max-w-7xl mx-auto horizontal-scroll">
       <ResumeCard />
       <InfoCard />
       <NiChartCard />
@@ -162,22 +106,6 @@
         <EmptyCard soft={index > 0} />
       {/each}
     </div>
-
-    {#if pageCount > 1}
-      <nav class="w-full flex justify-center gap-2.5 pb-2 relative z-10" aria-label="Card pages">
-        {#each Array(pageCount) as _, i}
-          <button
-            type="button"
-            aria-label="Go to page {i + 1}"
-            aria-current={i === currentPage ? "true" : undefined}
-            class="h-3 w-3 rounded-full ring-1 transition-all {i === currentPage
-              ? 'bg-blue-400 ring-blue-400 scale-110'
-              : 'bg-[#DBDCDD] ring-[#C5C7CA] hover:bg-[#C5C7CA]'}"
-            on:click={() => scrollToPage(i)}
-          />
-        {/each}
-      </nav>
-    {/if}
   </div>
 
   <div class="w-full flex flex-col sm:mb-0 relative fade-in-bottom">

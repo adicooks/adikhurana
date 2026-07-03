@@ -7,7 +7,7 @@
   href="https://adicooks.com/"
   external
   label="Adi's sneaker business"
-  additionalClasses="bg-[#010313] relative overflow-hidden"
+  additionalClasses="hover:scale-100 bg-[#010313] relative overflow-hidden"
 >
   <!-- background image -->
   <img
@@ -43,7 +43,7 @@
     </svg>
 
     <span class="translate-y-6 group-hover:translate-y-0 transition-transform text-xl font-semibold">
-      adi.soles
+      ak.soles
     </span>
     <p class="font-medium translate-y-6 group-hover:translate-y-0 text-white/80 opacity-0 group-hover:opacity-100 transition">
       resell, sleep, repeat

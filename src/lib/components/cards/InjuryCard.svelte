@@ -4,14 +4,6 @@
   import PiscBG from "$lib/assets/pisc-bg.png";
 
   let showModal = false;
-  /** @type {HTMLElement | null} */
-  let origin = null;
-
-  /** @param {Event} e */
-  function open(e) {
-    origin = /** @type {HTMLElement} */ (e.currentTarget);
-    showModal = true;
-  }
 
   const paragraphs = [
     "Philadelphia faces acute challenges with firearm violence, disproportionately affecting young people of color in vulnerable communities, both as victims and as perpetrators.",
@@ -20,9 +12,9 @@
 </script>
 
 <Card
-  additionalClasses="bg-[#081c5c]"
+  additionalClasses="hover:scale-100 bg-[#081c5c]"
   label="Penn Injury Science Center internship details"
-  onClick={open}
+  onClick={() => (showModal = true)}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full relative group">
     <svg
@@ -51,7 +43,7 @@
     </svg>
 
     <span class="z-10 translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold">
-      adi.pisc
+      data.pisc
     </span>
 
     <p class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition">
@@ -72,7 +64,6 @@
 {#if showModal}
   <DetailModal
     title="Data Analyst & Social Worker Intern, Penn Injury Science Center"
-    {origin}
     on:close={() => (showModal = false)}
   >
     <div slot="body" class="flex flex-col gap-4 text-base leading-relaxed text-[#010313]/75">

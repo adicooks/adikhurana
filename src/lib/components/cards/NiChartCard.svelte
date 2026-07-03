@@ -4,23 +4,15 @@
   import PennBG from "$lib/assets/penn-bg.jpeg";
 
   let showModal = false;
-  /** @type {HTMLElement | null} */
-  let origin = null;
-
-  /** @param {Event} e */
-  function open(e) {
-    origin = /** @type {HTMLElement} */ (e.currentTarget);
-    showModal = true;
-  }
 
   const description =
     "I collaborated with researchers at the Center for Biomedical Image Computing and Analytics (CBICA), which develops advanced computational methods to transform biomedical images into diagnostic and predictive tools for personalized medicine. My work focused on designing and developing an AI-powered mobile app for NiChart, a large and diverse collection of MRI images, to enable early detection of aging and neurodegenerative diseases through imaging biomarkers. The app is now in beta testing for clinical integration.";
 </script>
 
 <Card
-  additionalClasses="bg-[#ffffff]"
+  additionalClasses="hover:scale-100 bg-[#ffffff]"
   label="NiChart internship details"
-  onClick={open}
+  onClick={() => (showModal = true)}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-black h-full relative group">
     <svg
@@ -42,7 +34,7 @@
     </svg>
     <span
       class="translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold text-black z-10"
-      >adi.nichart</span
+      >dev.nichart</span
     >
     <p
       class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-black/80 opacity-0 group-hover:opacity-100 transition"
@@ -61,7 +53,7 @@
 </Card>
 
 {#if showModal}
-  <DetailModal title="Software Developer Intern, NiChart" {origin} on:close={() => (showModal = false)}>
+  <DetailModal title="Software Developer Intern, NiChart" on:close={() => (showModal = false)}>
     <p slot="body" class="text-base leading-relaxed text-[#010313]/75">{description}</p>
 
     <svelte:fragment slot="media">

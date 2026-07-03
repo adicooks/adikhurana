@@ -4,14 +4,6 @@
   import InfoBG from "$lib/assets/cards/adi-card.webp";
 
   let showModal = false;
-  /** @type {HTMLElement | null} */
-  let origin = null;
-
-  /** @param {Event} e */
-  function open(e) {
-    origin = /** @type {HTMLElement} */ (e.currentTarget);
-    showModal = true;
-  }
 
   const aboutParagraphs = [
     "I am an entrepreneur with a passion for technology, public safety and teaching young students.",
@@ -35,13 +27,13 @@
 </script>
 
 <Card
-  additionalClasses="relative overflow-hidden bg-[#F7F7F7]"
+  additionalClasses="hover:scale-100 relative overflow-hidden bg-[#F7F7F7]"
   label="About Adi"
-  onClick={open}
+  onClick={() => (showModal = true)}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start h-full relative group z-10">
     <span class="z-10 translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold text-white">
-      adi.about
+      about.adi
     </span>
 
     <p class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition">
@@ -61,7 +53,7 @@
 </Card>
 
 {#if showModal}
-  <DetailModal title="About Adi" {origin} on:close={() => (showModal = false)}>
+  <DetailModal title="About Adi" on:close={() => (showModal = false)}>
     <div slot="body" class="flex flex-col gap-4 text-base leading-relaxed text-[#010313]/75">
       {#each aboutParagraphs as paragraph}
         <p>{paragraph}</p>

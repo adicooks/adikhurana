@@ -79,7 +79,7 @@
   href={cardHref}
   external
   label="Adi's Spotify — {trackName}"
-  additionalClasses="bg-[#050505]"
+  additionalClasses="hover:scale-100 bg-[#050505]"
 >
   <div class="relative flex h-full w-full flex-col justify-between overflow-hidden px-[22px] py-4 text-white">
     {#if track?.image}

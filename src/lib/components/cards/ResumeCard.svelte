@@ -1,14 +1,10 @@
 <script>
-  import { onMount } from "svelte";
   import { track } from "@vercel/analytics";
   import { sendResumeEvent } from "$lib/resumeEvent";
   import Card from "../Card.svelte";
   import Disc from "$lib/assets/disc.png";
 
   const resumeHref = "/adi-khurana-resume";
-
-  /** @type {{ views: number; countries: number } | null} */
-  let reach = null;
 
   function trackResumeClick() {
     sendResumeEvent({
@@ -22,19 +18,6 @@
       source: "home_card"
     });
   }
-
-  onMount(async () => {
-    try {
-      const response = await fetch("/api/resume-reach");
-      const data = await response.json();
-
-      if (data.configured && data.views > 0) {
-        reach = { views: data.views, countries: data.countries };
-      }
-    } catch {
-      // Social proof is a bonus; the card works fine without it.
-    }
-  });
 </script>
 
 <Card
@@ -50,15 +33,10 @@
       src={Disc}
       alt=""
     />
-    <div class="absolute bottom-2.5 left-0 right-0 flex flex-col items-center leading-tight">
-      <p class="text-lg text-[#010313]/50 font-bold">view my resume</p>
-      {#if reach}
-        <p class="text-[11px] font-semibold text-[#010313]/35">
-          viewed {reach.views} {reach.views === 1 ? "time" : "times"}{reach.countries > 1
-            ? ` from ${reach.countries} countries`
-            : ""}
-        </p>
-      {/if}
-    </div>
+    <p
+      class="absolute bottom-4 left-1/2 -translate-x-1/2 text-lg text-[#010313]/50 font-bold"
+    >
+      view my resume
+    </p>
   </div>
 </Card>

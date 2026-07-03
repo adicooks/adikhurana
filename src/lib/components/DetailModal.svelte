@@ -1,45 +1,12 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { cubicOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
+  import { fade, scale } from "svelte/transition";
 
   export let title = "";
-  /** The card element the modal zooms out of, Wii channel-style. @type {HTMLElement | null} */
-  export let origin = null;
 
   const dispatch = createEventDispatcher();
   /** @type {HTMLDivElement | null} */
   let dialogEl = null;
-
-  /**
-   * Wii channel-zoom: FLIP from the clicked card's rect to the dialog's
-   * final rect. Falls back to a plain fade without an origin or when the
-   * user prefers reduced motion.
-   * @param {HTMLElement} node
-   */
-  function channelZoom(node, { duration = 380 } = {}) {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduceMotion || !origin) {
-      return { duration: 150, css: (/** @type {number} */ t) => `opacity: ${t}` };
-    }
-
-    const to = node.getBoundingClientRect();
-    const from = origin.getBoundingClientRect();
-    const dx = from.left + from.width / 2 - (to.left + to.width / 2);
-    const dy = from.top + from.height / 2 - (to.top + to.height / 2);
-    const sx = from.width / to.width;
-    const sy = from.height / to.height;
-
-    return {
-      duration,
-      easing: cubicOut,
-      css: (/** @type {number} */ t, /** @type {number} */ u) => `
-        transform: translate(${u * dx}px, ${u * dy}px) scale(${sx + (1 - sx) * t}, ${sy + (1 - sy) * t});
-        opacity: ${Math.min(1, 0.35 + t)};
-      `
-    };
-  }
 
   function close() {
     dispatch("close");
@@ -78,8 +45,7 @@
     aria-label={title}
     tabindex="-1"
     class="channel-shadow relative flex max-h-[85vh] w-full max-w-4xl flex-col overflow-hidden whitespace-normal rounded-3xl bg-[#F7F7F7] outline-none"
-    in:channelZoom
-    out:channelZoom={{ duration: 260 }}
+    transition:scale={{ duration: 200, start: 0.95 }}
   >
     <div class="flex items-center justify-between gap-4 border-b border-[#010313]/10 px-6 py-4 sm:px-8">
       <h2 class="text-xl font-semibold text-[#010313] sm:text-2xl">{title}</h2>
