@@ -14,8 +14,6 @@
   import GalaxyCard from "$lib/components/cards/GalaxyCard.svelte";
   import ResumeCard from "$lib/components/cards/ResumeCard.svelte";
   import InfoCard from "$lib/components/InfoCard.svelte";
-  import ForKidsByKidsCard from "$lib/components/ForKidsByKidsCard.svelte";
-  import HindiCard from "$lib/components/cards/HindiCard.svelte";
   import ScienceCard from "$lib/components/cards/ScienceCard.svelte";
   import Modal from "$lib/components/Modal.svelte";
 
@@ -26,9 +24,7 @@
   import LinkedBG   from "$lib/assets/linkedin-bg.jpeg";
   import PiscBG     from "$lib/assets/pisc-bg.png";
   import PennBG     from "$lib/assets/penn-bg.jpeg";
-  import TeachingBG from "$lib/assets/cards/teaching-card.webp";
   import InfoBG     from "$lib/assets/cards/adi-card.webp";
-  import Iccr       from "$lib/assets/cards/iccr-card.webp";
   import ScienceBG  from "$lib/assets/cards/science-card.webp";
 
   let showModal = false;
@@ -43,9 +39,7 @@
     linkedin:     { text: "my resume, but cooler",          photo: LinkedBG },
     injury:       { text: "injury trends decoded",          photo: PiscBG },
     nichart:      { text: "tackling alzheimer's with ai",   photo: PennBG },
-    forkidsbykids:{ text: "building for kids by kids",      photo: TeachingBG },
     info:         { text: "about",                          photo: InfoBG },
-    hindi:        { text: "representing india",             photo: Iccr },
     science:      { text: "exploring ideas thru science",   photo: ScienceBG },
   };
 
@@ -135,27 +129,15 @@
       <ResumeCard />
 
       <InfoCard
-        onEdit={() => openEditModal('forkidsbykids')}
+        onEdit={() => openEditModal('info')}
         text={cardContent.info.text}
         photo={cardContent.info.photo}
-      />
-
-      <ForKidsByKidsCard
-        onEdit={() => openEditModal('forkidsbykids')}
-        text={cardContent.forkidsbykids.text}
-        photo={cardContent.forkidsbykids.photo}
       />
 
        <NiChartCard
         onEdit={() => openEditModal('nichart')}
         text={cardContent.nichart.text}
         photo={cardContent.nichart.photo}
-      />
-
-      <HindiCard
-        onEdit={() => openEditModal('hindi')}
-        text={cardContent.hindi.text}
-        photo={cardContent.hindi.photo}
       />
 
       <ScienceCard
