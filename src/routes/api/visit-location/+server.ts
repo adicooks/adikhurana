@@ -24,6 +24,10 @@ function formatLocation(city: string, region: string, country: string) {
   const locationCountry = normalizeCountry(country);
 
   if (!locationCity) {
+    if (locationCountry === "US") {
+      return locationRegion || "unknown";
+    }
+
     return locationCountry || "unknown";
   }
 
@@ -34,11 +38,57 @@ function formatLocation(city: string, region: string, country: string) {
   return [locationCity, locationCountry].filter(Boolean).join(", ");
 }
 
+function getClientIp(headers: Headers) {
+  const forwardedFor = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return (
+    forwardedFor ||
+    headers.get("x-real-ip") ||
+    headers.get("cf-connecting-ip") ||
+    ""
+  );
+}
+
+async function getFallbackLocation(ip: string) {
+  if (!ip) return null;
+
+  try {
+    const response = await fetch(`https://ipwho.is/${ip}`, {
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) return null;
+
+    const location = await response.json();
+
+    if (!location.success) return null;
+
+    return {
+      city: location.city || "unknown",
+      country: location.country_code || "unknown",
+      region: location.region_code || location.region || "unknown"
+    };
+  } catch {
+    return null;
+  }
+}
+
 export const GET: RequestHandler = async ({ request }) => {
   const headers = request.headers;
-  const city = decodeHeader(headers.get("x-vercel-ip-city"));
-  const country = decodeHeader(headers.get("x-vercel-ip-country"));
-  const region = decodeHeader(headers.get("x-vercel-ip-country-region"));
+  let city = decodeHeader(headers.get("x-vercel-ip-city"));
+  let country = decodeHeader(headers.get("x-vercel-ip-country"));
+  let region = decodeHeader(headers.get("x-vercel-ip-country-region"));
+
+  if (city === "unknown") {
+    const fallbackLocation = await getFallbackLocation(getClientIp(headers));
+
+    if (fallbackLocation?.city && fallbackLocation.city !== "unknown") {
+      city = fallbackLocation.city;
+      country = fallbackLocation.country;
+      region = fallbackLocation.region;
+    }
+  }
 
   return json({
     city,
