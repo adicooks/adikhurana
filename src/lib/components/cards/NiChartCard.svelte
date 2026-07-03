@@ -18,7 +18,7 @@
 </script>
 
 <Card
-  additionalClasses="hover:scale-100 bg-[#ffffff]"
+  additionalClasses="bg-[#ffffff]"
   label="NiChart internship details"
   onClick={open}
 >
@@ -42,7 +42,7 @@
     </svg>
     <span
       class="translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold text-black z-10"
-      >dev.nichart</span
+      >adi.nichart</span
     >
     <p
       class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-black/80 opacity-0 group-hover:opacity-100 transition"

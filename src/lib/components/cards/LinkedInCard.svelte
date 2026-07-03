@@ -8,7 +8,7 @@
   href="https://www.linkedin.com/in/adi-khurana1/"
   external
   label="Adi's LinkedIn profile"
-  additionalClasses="hover:scale-100 bg-[#091f2d]"
+  additionalClasses="bg-[#091f2d]"
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full">
     <img

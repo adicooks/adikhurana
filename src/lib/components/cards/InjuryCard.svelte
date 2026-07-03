@@ -20,7 +20,7 @@
 </script>
 
 <Card
-  additionalClasses="hover:scale-100 bg-[#081c5c]"
+  additionalClasses="bg-[#081c5c]"
   label="Penn Injury Science Center internship details"
   onClick={open}
 >
@@ -51,7 +51,7 @@
     </svg>
 
     <span class="z-10 translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold">
-      data.pisc
+      adi.pisc
     </span>
 
     <p class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition">

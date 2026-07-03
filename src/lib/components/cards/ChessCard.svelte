@@ -7,7 +7,7 @@
   href="https://www.chess.com/member/adicooks"
   external
   label="Adi's chess.com profile"
-  additionalClasses="hover:scale-100 bg-[#0b0b0b]"
+  additionalClasses="bg-[#0b0b0b]"
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full">
     <svg

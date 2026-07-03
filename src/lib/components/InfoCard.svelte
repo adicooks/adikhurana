@@ -35,13 +35,13 @@
 </script>
 
 <Card
-  additionalClasses="hover:scale-100 relative overflow-hidden bg-[#F7F7F7]"
+  additionalClasses="relative overflow-hidden bg-[#F7F7F7]"
   label="About Adi"
   onClick={open}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start h-full relative group z-10">
     <span class="z-10 translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold text-white">
-      about.adi
+      adi.about
     </span>
 
     <p class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition">

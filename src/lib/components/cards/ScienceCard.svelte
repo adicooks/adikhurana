@@ -29,7 +29,7 @@
 </script>
 
 <Card
-  additionalClasses="hover:scale-100 relative overflow-hidden bg-transparent"
+  additionalClasses="relative overflow-hidden bg-transparent"
   label="Science research details"
   onClick={open}
 >
