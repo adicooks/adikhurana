@@ -92,11 +92,8 @@
 
     fetch("/api/visit-location")
       .then((response) => response.json())
-      .then(({ city, region, country }) => {
-        const locationParts = [city, region, country].filter(
-          (part) => part && part !== "unknown"
-        );
-        lastVisitLocation = locationParts.join(", ") || "unknown";
+      .then(({ location }) => {
+        lastVisitLocation = location || "unknown";
       })
       .catch(() => {
         lastVisitLocation = "unknown";
