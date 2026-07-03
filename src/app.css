@@ -20,93 +20,6 @@
     }
   }
 
-  .fade-in-right {
-    opacity: 0;
-    transform: translateX(200px);
-    animation: fadeIn 1s forwards;
-  }
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateX(200px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  .grid-layout {
-    grid-template-columns: repeat(3, max(256px, 1fr));
-  }
-
-  @keyframes flicker {
-    0% {
-      opacity: 0.27861;
-    }
-    5% {
-      opacity: 0.34769;
-    }
-    10% {
-      opacity: 0.23604;
-    }
-    15% {
-      opacity: 0.90626;
-    }
-    20% {
-      opacity: 0.18128;
-    }
-    25% {
-      opacity: 0.83891;
-    }
-    30% {
-      opacity: 0.65583;
-    }
-    35% {
-      opacity: 0.67807;
-    }
-    40% {
-      opacity: 0.26559;
-    }
-    45% {
-      opacity: 0.84693;
-    }
-    50% {
-      opacity: 0.96019;
-    }
-    55% {
-      opacity: 0.08594;
-    }
-    60% {
-      opacity: 0.20313;
-    }
-    65% {
-      opacity: 0.71988;
-    }
-    70% {
-      opacity: 0.53455;
-    }
-    75% {
-      opacity: 0.37288;
-    }
-    80% {
-      opacity: 0.71428;
-    }
-    85% {
-      opacity: 0.70419;
-    }
-    90% {
-      opacity: 0.7003;
-    }
-    95% {
-      opacity: 0.36108;
-    }
-    100% {
-      opacity: 0.24387;
-    }
-  }
-
   .crt::before {
     content: " ";
     display: block;
@@ -128,6 +41,14 @@
     z-index: 20;
     background-size: 100% 2px, 3px 100%;
     pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-bottom {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
@@ -207,14 +128,17 @@
     @apply font-space selection:bg-[#DBDCDD]/80;
   }
   * {
-    cursor: url("/crt-cursor.png"), auto !important;
-    /* cursor: none; */
+    cursor: url("/crt-cursor.png"), auto;
+  }
+  input,
+  textarea {
+    cursor: text;
   }
 }
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("/fonts/SpaceGrotesk-Bold.ttf");
+  src: url("/fonts/SpaceGrotesk-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -222,7 +146,7 @@
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("/fonts/SpaceGrotesk-Light.ttf");
+  src: url("/fonts/SpaceGrotesk-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -230,7 +154,7 @@
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("/fonts/SpaceGrotesk-Medium.ttf");
+  src: url("/fonts/SpaceGrotesk-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -238,7 +162,7 @@
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("/fonts/SpaceGrotesk-Regular.ttf");
+  src: url("/fonts/SpaceGrotesk-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -246,7 +170,7 @@
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("/fonts/SpaceGrotesk-SemiBold.ttf");
+  src: url("/fonts/SpaceGrotesk-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;

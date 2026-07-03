@@ -11,6 +11,24 @@
 
   injectAnalytics({ mode: dev ? "development" : "production" });
 
+  const siteUrl = "https://adicooks.vercel.app";
+  const title = "adi khurana";
+  const description =
+    "Adi Khurana — builder, researcher, and teacher. A Wii Menu-inspired portfolio of engineering, public-safety research, and entrepreneurship.";
+
+  const personSchema = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Adi Khurana",
+    url: siteUrl,
+    email: "mailto:theadikhurana@gmail.com",
+    sameAs: [
+      "https://github.com/adicooks",
+      "https://www.linkedin.com/in/adi-khurana1/",
+      "https://www.chess.com/member/adicooks"
+    ]
+  });
+
   let authReady = !browser;
 
   $: isPublicRoute =
@@ -29,9 +47,26 @@
 </script>
 
 <svelte:head>
-  <title>adi</title>
-  <meta name="description" content="fun guy" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#EEEEEE" />
+  <link rel="canonical" href={siteUrl + $page.url.pathname} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="adi khurana" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={siteUrl + $page.url.pathname} />
+  <meta property="og:image" content="{siteUrl}/og.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content="{siteUrl}/og.png" />
+
+  {@html `<script type="application/ld+json">${personSchema}</script>`}
 </svelte:head>
+
 {#if isPublicRoute}
   <slot />
 {:else if authReady && $isAuthenticated}

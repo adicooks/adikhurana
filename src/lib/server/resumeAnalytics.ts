@@ -95,76 +95,6 @@ function decodeHeader(value: string | null) {
   }
 }
 
-async function migrateDurationEvents() {
-  const sql = getSql();
-  if (!sql) {
-    throw new Error("Resume analytics database is not configured.");
-  }
-
-  await sql`
-    WITH matched AS (
-      SELECT
-        d.id AS duration_id,
-        v.id AS view_id,
-        d.duration_seconds,
-        d.duration_bucket,
-        d.created_at
-      FROM resume_analytics_events d
-      JOIN LATERAL (
-        SELECT id
-        FROM resume_analytics_events v
-        WHERE v.event_name = 'resume_view'
-          AND v.session_id IS NOT DISTINCT FROM d.session_id
-          AND v.created_at <= d.created_at
-        ORDER BY v.created_at DESC
-        LIMIT 1
-      ) v ON true
-      WHERE d.event_name = 'resume_duration'
-    ),
-    latest AS (
-      SELECT DISTINCT ON (view_id)
-        view_id,
-        duration_seconds,
-        duration_bucket
-      FROM matched
-      ORDER BY view_id, created_at DESC
-    )
-    UPDATE resume_analytics_events v
-    SET
-      duration_seconds = COALESCE(latest.duration_seconds, v.duration_seconds),
-      duration_bucket = COALESCE(latest.duration_bucket, v.duration_bucket)
-    FROM latest
-    WHERE v.id = latest.view_id
-  `;
-
-  await sql`
-    WITH matched AS (
-      SELECT d.id AS duration_id
-      FROM resume_analytics_events d
-      JOIN LATERAL (
-        SELECT id
-        FROM resume_analytics_events v
-        WHERE v.event_name = 'resume_view'
-          AND v.session_id IS NOT DISTINCT FROM d.session_id
-          AND v.created_at <= d.created_at
-        ORDER BY v.created_at DESC
-        LIMIT 1
-      ) v ON true
-      WHERE d.event_name = 'resume_duration'
-    )
-    DELETE FROM resume_analytics_events
-    WHERE id IN (SELECT duration_id FROM matched)
-  `;
-
-  await sql`
-    UPDATE resume_analytics_events
-    SET
-      event_name = 'resume_view',
-      source = COALESCE(source, 'duration_only')
-    WHERE event_name = 'resume_duration'
-  `;
-}
-
 async function ensureTable() {
   const sql = getSql();
   if (!sql) {
@@ -189,7 +119,6 @@ async function ensureTable() {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `;
-    await migrateDurationEvents();
   })();
 
   await tableReady;

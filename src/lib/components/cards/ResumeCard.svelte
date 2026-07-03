@@ -20,23 +20,23 @@
   }
 </script>
 
-<Card additionalClasses="bg-[#F7F7F7] cursor-pointer">
-  <a
-    href={resumeHref}
-    target="_blank"
-    rel="noopener noreferrer"
-    on:click={trackResumeClick}
-    class="flex flex-col items-center justify-center relative w-full h-full"
-  >
+<Card
+  href={resumeHref}
+  external
+  label="View Adi's resume"
+  additionalClasses="bg-[#F7F7F7]"
+  on:click={trackResumeClick}
+>
+  <div class="flex flex-col items-center justify-center relative w-full h-full">
     <img
       class="w-28 h-28 m-auto group-hover:rotate-180 duration-300"
       src={Disc}
-      alt="Disc"
+      alt=""
     />
     <p
       class="absolute bottom-4 left-1/2 -translate-x-1/2 text-lg text-[#010313]/50 font-bold"
     >
       view my resume
     </p>
-  </a>
+  </div>
 </Card>

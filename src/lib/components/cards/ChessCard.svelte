@@ -1,15 +1,13 @@
-
 <script>
   import Card from "../Card.svelte";
-  export let text = "playing for mate";
-  export let photo = "https://i.pinimg.com/736x/6d/b1/c5/6db1c5a9b2bff8df0a41ae382c83feec.jpg";
-  const url = "https://www.chess.com/member/adicooks";
-  const go = () => window.open(url, "_blank", "noopener");
+  import ChessBG from "$lib/assets/cards/chess-card.jpg";
 </script>
 
 <Card
+  href="https://www.chess.com/member/adicooks"
+  external
+  label="Adi's chess.com profile"
   additionalClasses="hover:scale-100 bg-[#0b0b0b]"
-  onClick={go}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-white h-full">
     <svg
@@ -23,6 +21,7 @@
       xmlns:xlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 512 512"
       xml:space="preserve"
+      aria-hidden="true"
       ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
         id="SVGRepo_tracerCarrier"
         stroke-linecap="round"
@@ -49,17 +48,15 @@
     <p
       class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition"
     >
-      {text}
+      playing for mate
     </p>
-    {#if photo}
-      <img
-        class="absolute z-8 -top-3 left-20 group-hover:-translate-y-2 transition-transform opacity-80"
-        src={photo}
-        alt=""
-        width="320"
-        height="320"
-        decoding="async"
-      />
-    {/if}
+    <img
+      class="absolute z-8 -top-3 left-20 group-hover:-translate-y-2 transition-transform opacity-80"
+      src={ChessBG}
+      alt=""
+      width="320"
+      height="320"
+      decoding="async"
+    />
   </div>
 </Card>

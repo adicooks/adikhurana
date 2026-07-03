@@ -3,8 +3,12 @@
   import WithCoverageLogo from "$lib/assets/withcoverage-logo.png";
 </script>
 
-<a href="https://www.withcoverage.com/" target="_blank" rel="noopener noreferrer">
-  <Card additionalClasses="hover:scale-100 bg-[#0a1418] cursor-pointer">
+<Card
+  href="https://www.withcoverage.com/"
+  external
+  label="WithCoverage — Adi's SWE internship"
+  additionalClasses="hover:scale-100 bg-[#0a1418]"
+>
     <div class="relative flex h-full w-full flex-col justify-between overflow-hidden px-[22px] py-4 text-white">
       <div
         class="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(174,172,246,0.38),transparent_31%),radial-gradient(circle_at_86%_20%,rgba(247,247,247,0.14),transparent_25%),linear-gradient(140deg,#061114_0%,#132327_48%,#090f17_100%)]"
@@ -54,5 +58,4 @@
         </p>
       </div>
     </div>
-  </Card>
-</a>
+</Card>

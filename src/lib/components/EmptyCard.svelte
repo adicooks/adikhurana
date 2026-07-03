@@ -1,14 +1,8 @@
 <script>
   import Card from "./Card.svelte";
-  export let soft = false;
   import clsx from "clsx";
 
-  // function randomHue() {
-  //   return Math.floor(Math.random() * 360);
-  // }
-
-  // const hue = randomHue();
-  // const color = `hsl(${hue}, 100%, 50%)`;
+  export let soft = false;
 </script>
 
 <Card

@@ -1,27 +1,37 @@
 <script>
   import Card from "../Card.svelte";
-
-  export let text = "tackling alzheimers with ai";
-  export let photo = "";
-
-  const awardLetter = "/pictures/contract.png";
-  const certification = "/pictures/certificate.png";
+  import DetailModal from "../DetailModal.svelte";
+  import PennBG from "$lib/assets/penn-bg.jpeg";
 
   let showModal = false;
+
+  const description =
+    "I collaborated with researchers at the Center for Biomedical Image Computing and Analytics (CBICA), which develops advanced computational methods to transform biomedical images into diagnostic and predictive tools for personalized medicine. My work focused on designing and developing an AI-powered mobile app for NiChart, a large and diverse collection of MRI images, to enable early detection of aging and neurodegenerative diseases through imaging biomarkers. The app is now in beta testing for clinical integration.";
 </script>
 
 <Card
   additionalClasses="hover:scale-100 bg-[#ffffff]"
+  label="NiChart internship details"
   onClick={() => (showModal = true)}
 >
   <div class="px-[22px] py-4 flex flex-col justify-end items-start text-black h-full relative group">
-    <img
-      class="translate-y-6 group-hover:translate-y-0 transition-transform mt1 z-10"
-      src="https://neuroimagingchart.com/images/Logo/brain_transparent_logo_cropped.png"
+    <svg
+      class="translate-y-6 group-hover:translate-y-0 transition-transform z-10"
+      xmlns="http://www.w3.org/2000/svg"
       width="30"
       height="30"
-      alt="Logo"
-    />
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#011F5B"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M9.5 2.5a3.5 3.5 0 0 0-3.46 3 3.5 3.5 0 0 0-2.54 4.13A3.5 3.5 0 0 0 4 15.5a3.5 3.5 0 0 0 3.5 4.4 3.5 3.5 0 0 0 5-1.15V5.5a3.5 3.5 0 0 0-3-3Z" />
+      <path d="M14.5 2.5a3.5 3.5 0 0 1 3.46 3 3.5 3.5 0 0 1 2.54 4.13A3.5 3.5 0 0 1 20 15.5a3.5 3.5 0 0 1-3.5 4.4 3.5 3.5 0 0 1-5-1.15V5.5a3.5 3.5 0 0 1 3-3Z" />
+      <path d="M12 8h-1.5M12 13h1.5" />
+    </svg>
     <span
       class="translate-y-6 group-hover:translate-y-0 transition-transform text-xl mt-1 font-semibold text-black z-10"
       >dev.nichart</span
@@ -29,110 +39,38 @@
     <p
       class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-black/80 opacity-0 group-hover:opacity-100 transition"
     >
-      {text}
+      tackling alzheimer's with ai
     </p>
-    {#if photo}
-      <img
-        class="absolute -bottom-12 -right-16 group-hover:-translate-y-2 transition-transform"
-        src={photo}
-        alt="Background"
-        width="640"
-        height="426"
-        decoding="async"
-      />
-    {/if}
+    <img
+      class="absolute -bottom-12 -right-16 group-hover:-translate-y-2 transition-transform"
+      src={PennBG}
+      alt=""
+      width="640"
+      height="426"
+      decoding="async"
+    />
   </div>
 </Card>
 
 {#if showModal}
-  <div class="modal-backdrop" on:click={() => (showModal = false)}>
-    <div class="modal-content" on:click|stopPropagation tabindex="0">
-      <button class="modal-close" on:click={() => (showModal = false)} aria-label="Close">×</button>
+  <DetailModal title="Software Developer Intern, NiChart" on:close={() => (showModal = false)}>
+    <p slot="body" class="text-base leading-relaxed text-[#010313]/75">{description}</p>
 
-      <div class="modal-5050-inner">
-        <!-- left: text (scrollable) -->
-        <div class="modal-5050-left">
-          <h2 class="text-2xl font-bold mb-4">
-            Software Developer Intern, NiChart
-          </h2>
-          <div class="whitespace-pre-wrap text-lg text-gray-700">
-            I collaborated with researchers at the Center for Biomedical Image Computing and Analytics (CBICA), which develops advanced computational methods to transform biomedical images into diagnostic and predictive tools for personalized medicine. My work focused on designing and developing an AI-powered mobile app for NiChart, a large and diverse collection of MRI images, to enable early detection of aging and neurodegenerative diseases through imaging biomarkers. The app is now in beta testing for clinical integration.
-          </div>
-        </div>
-
-        <!-- right: images (scrollable) -->
-        <div class="modal-5050-right">
-          <img src={awardLetter} alt="Award Letter" class="modal-image modal-image-lg" loading="lazy" decoding="async" />
-          <img src={certification} alt="Certification" class="modal-image" loading="lazy" decoding="async" />
-        </div>
-      </div>
-    </div>
-  </div>
+    <svelte:fragment slot="media">
+      <img
+        src="/pictures/contract.png"
+        alt="NiChart internship award letter"
+        class="detail-modal-photo"
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        src="/pictures/certificate.png"
+        alt="NiChart internship certificate"
+        class="detail-modal-photo"
+        loading="lazy"
+        decoding="async"
+      />
+    </svelte:fragment>
+  </DetailModal>
 {/if}
-
-<style>
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-
-  .modal-content {
-    background: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    min-width: 600px;
-    max-width: 1100px;
-    width: 90vw;
-    max-height: 80vh;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 2px 24px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modal-5050-inner {
-    display: flex;
-    gap: 1.5rem;
-    height: 60vh;
-  }
-
-  .modal-5050-left,
-  .modal-5050-right {
-    width: 50%;
-    overflow-y: auto;
-  }
-
-  .modal-5050-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-  }
-
-  .modal-image {
-    max-width: 100%;
-    max-height: 260px;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
-
-  .modal-image-lg {
-    max-height: 60vh;
-  }
-</style>

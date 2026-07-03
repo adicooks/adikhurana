@@ -1,33 +1,39 @@
 <script>
   import Card from "../Card.svelte";
+  import DetailModal from "../DetailModal.svelte";
+  import ScienceBG from "$lib/assets/cards/science-card.webp";
 
-  export let text = "exploring ideas thru science";
-  export let title = "adi.science";
-  export let photo = "";
-
-  export let hindidescp = `I developed SeniorConnect, a low-cost, wearable, real-time alert system connecting seniors with cognitive disabilities to their caregivers via a custom mobile app and worked on fit from 2022–2024. The system integrates an IoT device, programmed using Python and AWS cloud services, to send instant notifications to a Swift-built iOS app on caregivers’ smartphones upon activation by the senior. SeniorConnect was beta tested with seniors and caregivers. This prototype earned top awards at ISEF-affiliated and JSHS national science competitions. This paper has been published in the Journal of Emerging Investigators (JEI).
-
-After SeniorConnect, I developed AlertNow, a patent-pending, low-cost, real-time gunshot and firearm detection system leveraging multi-modal deep learning (CNN, YOLOv8) that notifies authorities in real time to enhance school safety; currently evaluating its commercial viability. This award-winning research was presented at the 2025 IEEE Integrated STEM Education Conference held at Princeton University. The AlertNow research paper was accepted for publication in IEEE Xplore.`;
-
-  export let modalTitle = "SeniorConnect & AlertNow";
   let showModal = false;
+
+  const paragraphs = [
+    "I developed SeniorConnect, a low-cost, wearable, real-time alert system connecting seniors with cognitive disabilities to their caregivers via a custom mobile app and worked on fit from 2022–2024. The system integrates an IoT device, programmed using Python and AWS cloud services, to send instant notifications to a Swift-built iOS app on caregivers' smartphones upon activation by the senior. SeniorConnect was beta tested with seniors and caregivers. This prototype earned top awards at ISEF-affiliated and JSHS national science competitions. This paper has been published in the Journal of Emerging Investigators (JEI).",
+    "After SeniorConnect, I developed AlertNow, a patent-pending, low-cost, real-time gunshot and firearm detection system leveraging multi-modal deep learning (CNN, YOLOv8) that notifies authorities in real time to enhance school safety; currently evaluating its commercial viability. This award-winning research was presented at the 2025 IEEE Integrated STEM Education Conference held at Princeton University. The AlertNow research paper was accepted for publication in IEEE Xplore."
+  ];
+
+  const photos = [
+    { src: "/pictures/adi-coriell-seniorconnect.jpg", alt: "Adi presenting SeniorConnect" },
+    { src: "/pictures/Adi-dvsf-2025-pic.jpg", alt: "Adi at the Delaware Valley Science Fair 2025" },
+    { src: "/pictures/award.jpg", alt: "Adi receiving a science fair award" },
+    { src: "/pictures/dvsf.jpg", alt: "Adi at DVSF" },
+    { src: "/pictures/jshs.jpg", alt: "Adi presenting at JSHS" },
+    { src: "/pictures/jshs_award.jpg", alt: "Adi receiving the JSHS award" }
+  ];
 </script>
 
 <Card
   additionalClasses="hover:scale-100 relative overflow-hidden bg-transparent"
+  label="Science research details"
   onClick={() => (showModal = true)}
 >
-  {#if photo}
-    <img
-      src={photo}
-      alt="Background"
-      class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none select-none"
-      style="object-position: center 30%;"
-      width="640"
-      height="854"
-      decoding="async"
-    />
-  {/if}
+  <img
+    src={ScienceBG}
+    alt=""
+    class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none select-none"
+    style="object-position: center 30%;"
+    width="640"
+    height="854"
+    decoding="async"
+  />
 
   <div class="absolute inset-0 z-[1] bg-gradient-to-t from-black/35 via-black/10 to-transparent"></div>
 
@@ -48,88 +54,33 @@ After SeniorConnect, I developed AlertNow, a patent-pending, low-cost, real-time
     </svg>
 
     <span class="z-10 translate-y-6 group-hover:translate-y-0 transition-transform text-xl font-semibold">
-      {title}
+      adi.science
     </span>
 
     <p class="font-medium translate-y-6 group-hover:translate-y-0 z-10 text-white/80 opacity-0 group-hover:opacity-100 transition">
-      {text}
+      exploring ideas thru science
     </p>
   </div>
 </Card>
 
 {#if showModal}
-  <div class="modal-backdrop" on:click={() => (showModal = false)}>
-    <div class="modal-content" on:click|stopPropagation tabindex="0">
-      <button class="modal-close" on:click={() => (showModal = false)} aria-label="Close">×</button>
-
-      <div class="modal-5050-inner">
-        <div class="modal-5050-left">
-          <h2 class="text-2xl font-bold mb-4">{modalTitle}</h2>
-          <div class="whitespace-pre-wrap text-lg text-gray-700">
-            {hindidescp}
-          </div>
-        </div>
-
-        <div class="modal-5050-right">
-            <img src="/pictures/Adi Coriell seniorconnect.png" alt="adi_pic" class="modal-photo" loading="lazy" decoding="async" />
-            <img src="/pictures/Adi-dvsf-2025-pic.jpg" alt="iccr" class="modal-photo" loading="lazy" decoding="async" />
-            <img src="/pictures/award.jpg" alt="IMG_6744" class="modal-photo" loading="lazy" decoding="async" />
-            <img src="/pictures/dvsf.jpg" alt="Wagah" class="modal-photo" loading="lazy" decoding="async" />
-            <img src="/pictures/jshs.jpg" alt="0D5A7413" class="modal-photo" loading="lazy" decoding="async" />
-            <img src="/pictures/jshs_award.jpg" alt="0D5A7417" class="modal-photo" loading="lazy" decoding="async" />
-        </div>
-      </div>
+  <DetailModal title="SeniorConnect & AlertNow" on:close={() => (showModal = false)}>
+    <div slot="body" class="flex flex-col gap-4 text-base leading-relaxed text-[#010313]/75">
+      {#each paragraphs as paragraph}
+        <p>{paragraph}</p>
+      {/each}
     </div>
-  </div>
-{/if}
 
-<style>
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  .modal-content {
-    background: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    min-width: 600px;
-    max-width: 1100px;
-    width: 90vw;
-    max-height: 80vh;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 2px 24px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-  }
-  .modal-5050-inner {
-    display: flex;
-    gap: 1.5rem;
-    height: 60vh;
-  }
-  .modal-5050-left,
-  .modal-5050-right {
-    width: 50%;
-    overflow-y: auto;
-  }
-  .modal-5050-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-  }
-  .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-  }
-</style>
+    <svelte:fragment slot="media">
+      {#each photos as photo}
+        <img
+          src={photo.src}
+          alt={photo.alt}
+          class="detail-modal-photo"
+          loading="lazy"
+          decoding="async"
+        />
+      {/each}
+    </svelte:fragment>
+  </DetailModal>
+{/if}
