@@ -45,8 +45,8 @@
   };
 
   const visibleCardCount = 11;
-  const emptyCardCount =
-    visibleCardCount % 3 === 0 ? 3 : 3 - (visibleCardCount % 3);
+  const cardsToCompleteColumn = (3 - (visibleCardCount % 3)) % 3;
+  const emptyCardCount = cardsToCompleteColumn + 3;
 
   function openEditModal(cardId: string) {
     modalCardId = cardId;
