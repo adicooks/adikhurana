@@ -101,7 +101,7 @@ async function getCurrentlyPlaying(accessToken: string) {
     }
   });
 
-  if (response.status === 204 || response.status === 403) {
+  if (response.status === 204 || response.status === 401 || response.status === 403) {
     return null;
   }
 
@@ -147,9 +147,18 @@ export const GET: RequestHandler = async () => {
       });
     }
 
-    const track =
-      (await getCurrentlyPlaying(accessToken)) ||
-      (await getRecentlyPlayed(accessToken));
+    let track = null;
+
+    try {
+      track = await getCurrentlyPlaying(accessToken);
+    } catch (error) {
+      console.warn(
+        "spotify-currently-playing unavailable",
+        error instanceof Error ? error.message : "unknown_error"
+      );
+    }
+
+    track ||= await getRecentlyPlayed(accessToken);
 
     return json(
       {
